@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta de Convalidaciones FP — Curso 2024-2025</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a18;min-height:100vh}
+header{background:#1a1a18;color:#f5f4f0;padding:1rem 2rem;display:flex;align-items:center;gap:1rem}
+header h1{font-size:18px;font-weight:500;letter-spacing:-.01em}
+header span{font-size:12px;opacity:.5;margin-left:auto;white-space:nowrap}
+.container{max-width:860px;margin:2rem auto;padding:0 1.5rem}
+.card{background:#fff;border:1px solid #e8e6e0;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+.card-title{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-bottom:1rem}
+.row{display:grid;grid-template-columns:1fr 40px 1fr;gap:8px;align-items:end}
+.col label{font-size:12px;color:#666;display:block;margin-bottom:6px}
+.col select{width:100%;border:1px solid #ddd;border-radius:8px;padding:9px 12px;font-size:14px;background:#fff;color:#1a1a18;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer}
+.col select:focus{outline:none;border-color:#1a1a18}
+.arrow{display:flex;align-items:center;justify-content:center;padding-bottom:4px;font-size:20px;color:#ccc}
+.modsel{background:#faf9f7;border:1px solid #e8e6e0;border-radius:10px;padding:1.25rem;margin-top:1rem}
+.modsel-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.modsel-header span{font-size:12px;font-weight:500;color:#555}
+.btn-all{margin-left:auto;font-size:11px;color:#555;background:none;border:1px solid #ddd;border-radius:20px;padding:3px 10px;cursor:pointer}
+.btn-all:hover{background:#f0ede8}
+.mod-grid{display:grid;gap:3px}
+.mod-check{display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;transition:background .12s}
+.mod-check:hover{background:#f0ede8}
+.mod-check input{flex-shrink:0;margin-top:3px;accent-color:#1a1a18}
+.mod-check span{font-size:13px;color:#222;line-height:1.4}
+.mod-check code{font-size:11px;color:#1a6fd4;font-family:'SF Mono',Monaco,monospace;margin-right:5px;white-space:nowrap}
+.results{margin-top:1.5rem}
+.empty{text-align:center;padding:3rem 1rem;color:#aaa;font-size:14px;border:1.5px dashed #e0ddd8;border-radius:10px;background:#faf9f7}
+.empty svg{display:block;margin:0 auto 12px;opacity:.4}
+.section{margin-bottom:1.25rem}
+.sec-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#888;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:6px}
+.badge{background:#e8f0fc;color:#1a6fd4;border-radius:20px;padding:2px 9px;font-size:11px;font-weight:600}
+.item{display:grid;grid-template-columns:82px 1fr;overflow:hidden;background:#fff;border:1px solid #e8e6e0;border-radius:8px;margin-bottom:5px}
+.item-cod{font-size:11px;font-weight:600;color:#1a6fd4;padding:10px 8px;background:#f5f8fe;display:flex;align-items:center;justify-content:center;text-align:center;border-right:1px solid #e8e6e0;font-family:'SF Mono',Monaco,monospace;word-break:break-all;line-height:1.3}
+.item-body{padding:10px 14px}
+.item-nom{font-size:13px;color:#1a1a18;line-height:1.4;font-weight:500}
+.item-src{font-size:12px;color:#888;margin-top:3px;line-height:1.4}
+.item-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.item-tag{font-size:10px;color:#999;background:#f5f4f0;border-radius:4px;padding:2px 6px;display:inline-block}
+.item-ident{background:#f0faf4;border-color:#b8e8c8}
+.item-ident .item-cod{color:#1a7a3c;background:#e4f5eb;border-color:#b8e8c8}
+.item-ident .item-nom{color:#1a7a3c}
+.item-warn{background:#fffbf0;border-color:#f5dfa0}
+.item-warn .item-cod{color:#b07000;background:#fef9e7;border-color:#f5dfa0}
+.warn-box{background:#fffbf0;border:1px solid #f5dfa0;border-radius:8px;padding:10px 14px;margin-bottom:5px;font-size:12px;color:#8a6000;display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.info-box{background:#f0f5ff;border:1px solid #c0d4f5;border-radius:8px;padding:10px 14px;margin-bottom:5px;font-size:12px;color:#2a4a8a;display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.nota-empty{background:#faf9f7;border:1px solid #e8e6e0;border-radius:8px;padding:12px 16px;font-size:13px;color:#888;display:flex;gap:8px;align-items:center}
+footer{text-align:center;padding:2rem;font-size:12px;color:#bbb}
+@media(max-width:600px){.row{grid-template-columns:1fr;}.arrow{display:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+  <h1>Consulta de Convalidaciones FP</h1>
+  <span>Curso 2024-2025 · Normativa CAM · RD 1085/2020</span>
+</header>
+
+<div class="container">
+  <div class="card">
+    <div class="card-title">Selecciona la formación</div>
+    <div class="row">
+      <div class="col">
+        <label>Formación de origen (tiene)</label>
+        <select id="sel-orig" onchange="onOrigenChange()">
+          <option value="">— Selecciona —</option>
+        </select>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <label>Ciclo de destino (quiere cursar)</label>
+        <select id="sel-dest" onchange="calcular()">
+          <option value="">— Selecciona —</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="mod-selector" style="display:none" class="modsel">
+      <div class="modsel-header">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span id="modsel-label">Módulos superados</span>
+        <button class="btn-all" id="btn-all" onclick="toggleAll()">marcar todos</button>
+      </div>
+      <div class="mod-grid" id="mod-grid"></div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="empty">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Selecciona origen y destino para consultar las convalidaciones posibles
+    </div>
+  </div>
+</div>
+
+<footer>Uso interno · Centro de FP · Datos basados en RD 1085/2020 y Guía CAM 2024-2025</footer>
+
+<script>
+const CICLOS_DEST=[
+  {id:"GA", nom:"Gestión Administrativa (GM)",grado:"medio",familia:"Administración y Gestión",rd:"RD 1631/2009"},
+  {id:"AF", nom:"Administración y Finanzas (GS)",grado:"superior",familia:"Administración y Gestión",rd:"RD 1584/2011"},
+  {id:"MK", nom:"Marketing y Publicidad (GS)",grado:"superior",familia:"Comercio y Marketing",rd:"RD 1571/2011"},
+  {id:"CI", nom:"Comercio Internacional (GS)",grado:"superior",familia:"Comercio y Marketing",rd:"RD 1574/2011"},
+  {id:"TL", nom:"Transporte y Logística (GS)",grado:"superior",familia:"Transporte y Mantenimiento de Vehículos",rd:"RD 1572/2011"},
+  {id:"SMR",nom:"Sistemas Microinformáticos y Redes (GM)",grado:"medio",familia:"Informática y Comunicaciones",rd:"RD 1691/2007"},
+  {id:"DAW",nom:"Desarrollo de Aplicaciones Web (GS)",grado:"superior",familia:"Informática y Comunicaciones",rd:"RD 686/2010"},
+  {id:"DAM",nom:"Desarrollo de Aplicaciones Multiplataforma (GS)",grado:"superior",familia:"Informática y Comunicaciones",rd:"RD 450/2010"},
+  {id:"ASIR",nom:"Administración de Sistemas Informáticos en Red (GS)",grado:"superior",familia:"Informática y Comunicaciones",rd:"RD 1629/2009"},
+];
+const MODS={
+  GA:[{cod:"0437",nom:"Comunicación empresarial y atención al cliente"},{cod:"0438",nom:"Operaciones administrativas de la compraventa"},{cod:"0442",nom:"Operaciones administrativas de recursos humanos"},{cod:"0441",nom:"Técnica contable"},{cod:"0443",nom:"Tratamiento de la documentación contable"},{cod:"0448",nom:"Operaciones auxiliares de gestión de tesorería"},{cod:"0439",nom:"Empresa y administración"},{cod:"0440",nom:"Tratamiento informático de la información"},{cod:"0223",nom:"Aplicaciones ofimáticas"},{cod:"FOL",nom:"Formación y orientación laboral (FOL)"},{cod:"EIE",nom:"Empresa e iniciativa emprendedora (EIE)"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  AF:[{cod:"0647",nom:"Gestión de la documentación jurídica y empresarial"},{cod:"0649",nom:"Ofimática y proceso de la información"},{cod:"0652",nom:"Gestión de recursos humanos"},{cod:"0653",nom:"Gestión financiera"},{cod:"0654",nom:"Contabilidad y fiscalidad"},{cod:"0655",nom:"Gestión logística y comercial"},{cod:"0656",nom:"Simulación empresarial"},{cod:"0651",nom:"Comunicación y atención al cliente"},{cod:"0623",nom:"Gestión económica y financiera de la empresa"},{cod:"1110",nom:"Atención al cliente, consumidor y usuario"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio de otra CCAA)"},{cod:"FOL",nom:"Formación y orientación laboral (FOL)"},{cod:"EIE",nom:"Empresa e iniciativa emprendedora (EIE)"},{cod:"1708",nom:"Sostenibilidad aplicada al sistema productivo"},{cod:"1665",nom:"Digitalización aplicada a los sectores productivos"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  MK:[{cod:"0930",nom:"Políticas de marketing"},{cod:"1008",nom:"Medios y soportes de comunicación"},{cod:"1009",nom:"Lanzamiento de productos y servicios"},{cod:"1110",nom:"Atención al cliente, consumidor y usuario"},{cod:"0623",nom:"Gestión económica y financiera de la empresa"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio de otra CCAA)"},{cod:"FOL",nom:"Formación y orientación laboral (FOL)"},{cod:"EIE",nom:"Empresa e iniciativa emprendedora (EIE)"},{cod:"1708",nom:"Sostenibilidad aplicada al sistema productivo"},{cod:"1665",nom:"Digitalización aplicada a los sectores productivos"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  CI:[{cod:"0627",nom:"Gestión administrativa del comercio internacional"},{cod:"0823",nom:"Marketing internacional"},{cod:"0824",nom:"Negociación internacional"},{cod:"0825",nom:"Financiación internacional"},{cod:"0826",nom:"Medios de pago internacionales"},{cod:"0625",nom:"Logística de almacenamiento"},{cod:"0622",nom:"Transporte internacional de mercancías"},{cod:"0623",nom:"Gestión económica y financiera de la empresa"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio de otra CCAA)"},{cod:"FOL",nom:"Formación y orientación laboral (FOL)"},{cod:"EIE",nom:"Empresa e iniciativa emprendedora (EIE)"},{cod:"1708",nom:"Sostenibilidad aplicada al sistema productivo"},{cod:"1665",nom:"Digitalización aplicada a los sectores productivos"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  TL:[{cod:"0623",nom:"Gestión económica y financiera de la empresa"},{cod:"0625",nom:"Logística de almacenamiento"},{cod:"0626",nom:"Logística de aprovisionamiento"},{cod:"0627",nom:"Gestión administrativa del comercio internacional"},{cod:"0624",nom:"Comercialización del transporte y la logística"},{cod:"0628",nom:"Organización del transporte de viajeros"},{cod:"0629",nom:"Organización del transporte de mercancías"},{cod:"0622",nom:"Transporte internacional de mercancías"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio de otra CCAA)"},{cod:"FOL",nom:"Formación y orientación laboral (FOL)"},{cod:"EIE",nom:"Empresa e iniciativa emprendedora (EIE)"},{cod:"1708",nom:"Sostenibilidad aplicada al sistema productivo"},{cod:"1665",nom:"Digitalización aplicada a los sectores productivos"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  SMR:[{cod:"0221",nom:"Montaje y mantenimiento de equipos"},{cod:"0222",nom:"Sistemas operativos monopuesto"},{cod:"0224",nom:"Sistemas operativos en red"},{cod:"0225",nom:"Redes locales"},{cod:"0223",nom:"Aplicaciones ofimáticas"},{cod:"0227",nom:"Servicios de red"},{cod:"0228",nom:"Aplicaciones web"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio de otra CCAA)"},{cod:"FOL",nom:"Formación y orientación laboral (FOL)"},{cod:"EIE",nom:"Empresa e iniciativa emprendedora (EIE)"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  DAW:[{cod:"0483",nom:"Sistemas informáticos"},{cod:"0484",nom:"Bases de datos"},{cod:"0485",nom:"Programación"},{cod:"0487",nom:"Entornos de desarrollo"},{cod:"0488",nom:"Desarrollo de interfaces"},{cod:"0489",nom:"Programación multimedia y dispositivos móviles"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio de otra CCAA)"},{cod:"FOL",nom:"Formación y orientación laboral (FOL)"},{cod:"EIE",nom:"Empresa e iniciativa emprendedora (EIE)"},{cod:"1708",nom:"Sostenibilidad aplicada al sistema productivo"},{cod:"1665",nom:"Digitalización aplicada a los sectores productivos"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  DAM:[{cod:"0483",nom:"Sistemas informáticos"},{cod:"0484",nom:"Bases de datos"},{cod:"0485",nom:"Programación"},{cod:"0486",nom:"Acceso a datos"},{cod:"0487",nom:"Entornos de desarrollo"},{cod:"0488",nom:"Desarrollo de interfaces"},{cod:"0489",nom:"Programación multimedia y dispositivos móviles"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio de otra CCAA)"},{cod:"FOL",nom:"Formación y orientación laboral (FOL)"},{cod:"EIE",nom:"Empresa e iniciativa emprendedora (EIE)"},{cod:"1708",nom:"Sostenibilidad aplicada al sistema productivo"},{cod:"1665",nom:"Digitalización aplicada a los sectores productivos"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  ASIR:[{cod:"0369",nom:"Implantación de sistemas operativos"},{cod:"0370",nom:"Planificación y administración de redes"},{cod:"0371",nom:"Fundamentos de hardware"},{cod:"0372",nom:"Gestión de bases de datos"},{cod:"0377",nom:"Administración de sistemas gestores de bases de datos"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio de otra CCAA)"},{cod:"FOL",nom:"Formación y orientación laboral (FOL)"},{cod:"EIE",nom:"Empresa e iniciativa emprendedora (EIE)"},{cod:"1708",nom:"Sostenibilidad aplicada al sistema productivo"},{cod:"1665",nom:"Digitalización aplicada a los sectores productivos"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  GAS:[{cod:"0626",nom:"Logística de aprovisionamiento"},{cod:"FOL",nom:"FOL"},{cod:"EIE",nom:"EIE"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  AD:[{cod:"FOL",nom:"FOL"},{cod:"EIE",nom:"EIE"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  ME:[{cod:"FOL",nom:"FOL"},{cod:"EIE",nom:"EIE"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  ANIM3D:[{cod:"FOL",nom:"FOL"},{cod:"EIE",nom:"EIE"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+};
+const MODS_LOGSE={
+  TGA:[{cod:"L-COM",nom:"Comunicación, archivo de la información y operatoria de teclados"},{cod:"L-COMP",nom:"Gestión administrativa de compraventa"},{cod:"L-RRHH",nom:"Gestión administrativa de personal"},{cod:"L-CONT",nom:"Contabilidad general y tesorería"},{cod:"L-FIN",nom:"Productos y servicios financieros y de seguros básicos"},{cod:"L-GA",nom:"Principios de gestión administrativa pública"},{cod:"L-INF",nom:"Aplicaciones informáticas"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  TS_SEC:[{cod:"L-DAT",nom:"Gestión de datos"},{cod:"L-DOC",nom:"Elaboración y presentación de documentos e información"},{cod:"L-COM2",nom:"Comunicación y relaciones profesionales"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  TS_AF:[{cod:"L-ADM",nom:"Administración pública"},{cod:"L-INF2",nom:"Aplicaciones informáticas y operatoria de teclados"},{cod:"L-RRHH2",nom:"Recursos humanos"},{cod:"L-FIN2",nom:"Productos y servicios financieros y de seguros"},{cod:"L-CONT2",nom:"Contabilidad y fiscalidad"},{cod:"L-LOG",nom:"Gestión del aprovisionamiento"},{cod:"L-EMP",nom:"Proyecto empresarial"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio LOGSE u otra CCAA)"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  TS_CI:[{cod:"L-GCOM",nom:"Gestión administrativa del comercio internacional"},{cod:"L-MKTINT",nom:"Marketing internacional"},{cod:"L-NEG",nom:"Negociación internacional"},{cod:"L-FININT",nom:"Financiación internacional"},{cod:"L-PAGO",nom:"Medios de pago internacionales"},{cod:"L-ALM",nom:"Almacenaje de productos"},{cod:"L-TRANS",nom:"Transporte internacional de mercancías"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio LOGSE u otra CCAA)"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  TS_GCM:[{cod:"L-LOG2",nom:"Logística comercial"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio LOGSE u otra CCAA)"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  TS_GT:[{cod:"L-GCOM2",nom:"Gestión administrativa del comercio internacional"},{cod:"L-TRANS2",nom:"Transporte internacional de mercancías"},{cod:"L-LOG3",nom:"Almacenaje de productos"},{cod:"L-TP",nom:"Planificación y gestión de la explotación del transporte terrestre"},{cod:"L-SERV",nom:"Organización del servicio de transporte terrestre"},{cod:"ING_CCAA",nom:"Inglés / Lengua extranjera (módulo propio LOGSE u otra CCAA)"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  TS_ASI:[{cod:"L-SIS",nom:"Sistemas informáticos monousuario y multiusuario"},{cod:"L-RED",nom:"Redes de área local"},{cod:"L-BBDD",nom:"Sistemas gestores de bases de datos"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  TS_EXSI:[{cod:"L-INS1",nom:"Instalación y Mantenimiento de Servicios de Redes Locales"},{cod:"L-INS2",nom:"Instalación y Mantenimiento de Equipos y Sistemas Informáticos"},{cod:"L-OFI",nom:"Implantación y Mantenimiento de Aplicaciones Ofimáticas y Corporativas"},{cod:"L-WEB",nom:"Instalación y Mantenimiento de Servicios de Internet"},{cod:"L-PORT",nom:"Mantenimiento de Portales de Información"},{cod:"L-SO",nom:"Sistemas Operativos en Entornos Monousuario y Multiusuario"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+  TS_DAI:[{cod:"L-SIM",nom:"Sistemas informáticos multiusuario y en red"},{cod:"L-APP",nom:"Desarrollo de aplicaciones en entornos de cuarta generación y CASE"},{cod:"L-PROG",nom:"Programación en lenguajes estructurados"},{cod:"L-ANALIS",nom:"Análisis y diseño detallado de aplicaciones informáticas de gestión"},{cod:"L-DISE",nom:"Diseño y realización de servicios de presentación en entornos gráficos"},{cod:"L-BBDD2",nom:"Sistemas gestores de bases de datos"},{cod:"CICLO",nom:"— Ciclo completo —"}],
+};
+const GENERICAS=[
+  {id:"GEN_FOL_LOE",nom:"Módulo FOL de cualquier ciclo LOE",checks:[{cod:"FOL_LOE",nom:"Formación y orientación laboral (FOL) — cualquier ciclo LOE"}]},
+  {id:"GEN_FOL_LOGSE",nom:"Módulo FOL de cualquier ciclo LOGSE + Nivel Básico PRL",checks:[{cod:"FOL_LOGSE",nom:"FOL (LOGSE) + certificado nivel básico prevención (RD 39/1997)"}]},
+  {id:"GEN_EIE_LOE",nom:"Módulo EIE de cualquier ciclo LOE",checks:[{cod:"EIE_LOE",nom:"Empresa e iniciativa emprendedora (EIE) — cualquier ciclo LOE"}]},
+  {id:"GEN_AGYPE_LOGSE",nom:"Módulo Admón., gestión y comercialización de la pequeña empresa (LOGSE)",checks:[{cod:"AGYPE_LOGSE",nom:"Administración, gestión y comercialización en la pequeña empresa — cualquier ciclo LOGSE"}]},
+  {id:"GEN_FAG",nom:"Ciclo GM o GS completo — familia Administración y Gestión",checks:[{cod:"FAG_CICLO",nom:"Ciclo completo GM o GS — familia Administración y Gestión (cualquier título)"}]},
+  {id:"GEN_FCM",nom:"Ciclo GM o GS completo — familia Comercio y Marketing",checks:[{cod:"FCM_CICLO",nom:"Ciclo completo GM o GS — familia Comercio y Marketing (cualquier título)"}]},
+  {id:"GEN_PRP_LOGSE",nom:"CFGS Prevención de Riesgos Profesionales (LOGSE)",checks:[{cod:"PRP_LOGSE",nom:"T.S. en Prevención de Riesgos Profesionales (LOGSE)"}]},
+  {id:"GEN_SOST",nom:"Módulo 1708 Sostenibilidad aplicada al sistema productivo",checks:[{cod:"SOST",nom:"1708 Sostenibilidad aplicada al sistema productivo — misma familia profesional"}]},
+  {id:"GEN_DIGIT",nom:"Módulo 1665 Digitalización aplicada a los sectores productivos",checks:[{cod:"DIGIT",nom:"1665 Digitalización aplicada a los sectores productivos — GS misma familia profesional"}]},
+  {id:"GEN_INGLES",nom:"Certificaciones o módulos de inglés",checks:[
+    {cod:"ING_0156",nom:"0156 Inglés Profesional de GM — misma u otra familia con correspondencia CAM (Res. 28/06/2022)"},
+    {cod:"ING_0179",nom:"0179 Inglés Profesional de GS — misma u otra familia con correspondencia CAM (Res. 28/06/2022)"},
+    {cod:"ING_CM13",nom:"CM13 Inglés técnico para grado medio (módulo propio CAM)"},
+    {cod:"ING_CM14",nom:"CM14 Inglés técnico para grado superior (módulo propio CAM)"},
+    {cod:"ING_CM15",nom:"CM15 Lengua extranjera profesional GM (módulo propio CAM)"},
+    {cod:"ING_CM16",nom:"CM16 Lengua extranjera profesional GS (módulo propio CAM)"},
+    {cod:"ING_EOI_B1",nom:"Certificado Nivel Intermedio (B1) de inglés — EOI española (RD 1629/2006)"},
+    {cod:"ING_EOI_B2",nom:"Certificado Nivel Avanzado (B2) o superior de inglés — EOI española (RD 1629/2006)"},
+    {cod:"ING_GRADO",nom:"Grado (o equivalente) en Filología Inglesa o Traducción e Interpretación (inglés)"},
+  ]},
+];
+const REGLAS=[
+  {oc:"DAM",od:"0484",dc:"ASIR",dd:"0372",dn:"Gestión de bases de datos"},
+  {oc:"DAM",od:"0484",dc:"ASIR",dd:"0377",dn:"Administración de sistemas gestores de bases de datos"},
+  {oc:"DAW",od:"0484",dc:"ASIR",dd:"0372",dn:"Gestión de bases de datos"},
+  {oc:"DAW",od:"0484",dc:"ASIR",dd:"0377",dn:"Administración de sistemas gestores de bases de datos"},
+  {oc:"ASIR",od:"CICLO",dc:"DAM",dd:"0483",dn:"Sistemas informáticos",nota:"Ciclo completo ASIR"},
+  {oc:"ASIR",od:"CICLO",dc:"DAM",dd:"0484",dn:"Bases de datos",nota:"Ciclo completo ASIR"},
+  {oc:"ASIR",od:"CICLO",dc:"DAW",dd:"0483",dn:"Sistemas informáticos",nota:"Ciclo completo ASIR"},
+  {oc:"ASIR",od:"CICLO",dc:"DAW",dd:"0484",dn:"Bases de datos",nota:"Ciclo completo ASIR"},
+  {oc:"ME",od:"CICLO",dc:"ASIR",dd:"0371",dn:"Fundamentos de hardware",nota:"Ciclo completo Mantenimiento Electrónico"},
+  {oc:"ME",od:"CICLO",dc:"DAM",dd:"0483",dn:"Sistemas informáticos",nota:"Ciclo completo Mantenimiento Electrónico"},
+  {oc:"ME",od:"CICLO",dc:"DAM",dd:"0484",dn:"Bases de datos",nota:"Ciclo completo Mantenimiento Electrónico"},
+  {oc:"ME",od:"CICLO",dc:"DAW",dd:"0483",dn:"Sistemas informáticos",nota:"Ciclo completo Mantenimiento Electrónico"},
+  {oc:"ME",od:"CICLO",dc:"DAW",dd:"0484",dn:"Bases de datos",nota:"Ciclo completo Mantenimiento Electrónico"},
+  {oc:"ME",od:"CICLO",dc:"DAW",dd:"0489",dn:"Programación multimedia y dispositivos móviles",nota:"Ciclo completo Mantenimiento Electrónico"},
+  {oc:"ANIM3D",od:"CICLO",dc:"DAM",dd:"0489",dn:"Programación multimedia y dispositivos móviles",nota:"Ciclo completo Animaciones 3D"},
+  {oc:"ANIM3D",od:"CICLO",dc:"DAW",dd:"0489",dn:"Programación multimedia y dispositivos móviles",nota:"Ciclo completo Animaciones 3D"},
+  {oc:"GA",od:"0440",dc:"SMR",dd:"0223",dn:"Aplicaciones ofimáticas"},
+  {oc:"AF",od:"CICLO",dc:"CI",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo AF"},
+  {oc:"AF",od:"CICLO",dc:"MK",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo AF"},
+  {oc:"AF",od:"CICLO",dc:"MK",dd:"1110",dn:"Atención al cliente, consumidor y usuario",nota:"Ciclo completo AF"},
+  {oc:"AF",od:"CICLO",dc:"TL",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo AF"},
+  {oc:"AF",od:"0655",dc:"TL",dd:"0626",dn:"Logística de aprovisionamiento"},
+  {oc:"MK",od:"CICLO",dc:"AF",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo MK"},
+  {oc:"MK",od:"CICLO",dc:"TL",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo MK"},
+  {oc:"CI",od:"0625",dc:"AF",dd:"0655",dn:"Gestión logística y comercial"},
+  {oc:"CI",od:"0622",dc:"TL",dd:"0622",dn:"Transporte internacional de mercancías"},
+  {oc:"CI",od:"0625",dc:"TL",dd:"0625",dn:"Logística de almacenamiento"},
+  {oc:"CI",od:"CICLO",dc:"AF",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo CI"},
+  {oc:"TL",od:"CICLO",dc:"AF",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo TL"},
+  {oc:"TL",od:"CICLO",dc:"AF",dd:"0655",dn:"Gestión logística y comercial",nota:"Ciclo completo TL"},
+  {oc:"TL",od:"0622",dc:"CI",dd:"0622",dn:"Transporte internacional de mercancías"},
+  {oc:"TL",od:"0625",dc:"CI",dd:"0625",dn:"Logística de almacenamiento"},
+  {oc:"TL",od:"CICLO",dc:"CI",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo TL"},
+  {oc:"GAS",od:"CICLO",dc:"AF",dd:"0655",dn:"Gestión logística y comercial",nota:"Ciclo completo GAS"},
+  {oc:"GAS",od:"0626",dc:"AF",dd:"0655",dn:"Gestión logística y comercial"},
+  {oc:"AD",od:"CICLO",dc:"CI",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo AD"},
+  {oc:"AD",od:"CICLO",dc:"MK",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo AD"},
+  {oc:"AD",od:"CICLO",dc:"MK",dd:"1110",dn:"Atención al cliente, consumidor y usuario",nota:"Ciclo completo AD"},
+  {oc:"AD",od:"CICLO",dc:"TL",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo AD"},
+  {oc:"TGA",od:"L-COM",dc:"GA",dd:"0437",dn:"Comunicación empresarial y atención al cliente"},
+  {oc:"TGA",od:"L-COMP",dc:"GA",dd:"0438",dn:"Operaciones administrativas de la compraventa"},
+  {oc:"TGA",od:"L-RRHH",dc:"GA",dd:"0442",dn:"Operaciones administrativas de recursos humanos"},
+  {oc:"TGA",od:"L-CONT",dc:"GA",dd:"0441",dn:"Técnica contable"},
+  {oc:"TGA",od:"L-CONT",dc:"GA",dd:"0443",dn:"Tratamiento de la documentación contable"},
+  {oc:"TGA",od:"L-FIN",dc:"GA",dd:"0448",dn:"Operaciones auxiliares de gestión de tesorería"},
+  {oc:"TGA",od:"L-GA",dc:"GA",dd:"0439",dn:"Empresa y administración"},
+  {oc:"TGA",od:"L-INF",dc:"GA",dd:"0440",dn:"Tratamiento informático de la información"},
+  {oc:"TS_AF",od:"L-ADM",dc:"AF",dd:"0647",dn:"Gestión de la documentación jurídica y empresarial"},
+  {oc:"TS_AF",od:"L-INF2",dc:"AF",dd:"0649",dn:"Ofimática y proceso de la información"},
+  {oc:"TS_AF",od:"L-RRHH2",dc:"AF",dd:"0652",dn:"Gestión de recursos humanos"},
+  {oc:"TS_AF",od:"L-FIN2",dc:"AF",dd:"0653",dn:"Gestión financiera"},
+  {oc:"TS_AF",od:"L-CONT2",dc:"AF",dd:"0654",dn:"Contabilidad y fiscalidad"},
+  {oc:"TS_AF",od:"L-LOG",dc:"AF",dd:"0655",dn:"Gestión logística y comercial"},
+  {oc:"TS_AF",od:"L-EMP",dc:"AF",dd:"0656",dn:"Simulación empresarial"},
+  {oc:"TS_SEC",od:"L-DAT",dc:"AF",dd:"0649",dn:"Ofimática y proceso de la información"},
+  {oc:"TS_SEC",od:"L-COM2",dc:"AF",dd:"0651",dn:"Comunicación y atención al cliente"},
+  {oc:"TS_CI",od:"L-GCOM",dc:"CI",dd:"0627",dn:"Gestión administrativa del comercio internacional"},
+  {oc:"TS_CI",od:"L-MKTINT",dc:"CI",dd:"0823",dn:"Marketing internacional"},
+  {oc:"TS_CI",od:"L-NEG",dc:"CI",dd:"0824",dn:"Negociación internacional"},
+  {oc:"TS_CI",od:"L-FININT",dc:"CI",dd:"0825",dn:"Financiación internacional"},
+  {oc:"TS_CI",od:"L-PAGO",dc:"CI",dd:"0826",dn:"Medios de pago internacionales"},
+  {oc:"TS_CI",od:"L-ALM",dc:"CI",dd:"0625",dn:"Logística de almacenamiento"},
+  {oc:"TS_CI",od:"L-TRANS",dc:"CI",dd:"0622",dn:"Transporte internacional de mercancías"},
+  {oc:"TS_CI",od:"CICLO",dc:"AF",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo TS CI"},
+  {oc:"TS_CI",od:"CICLO",dc:"TL",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo TS CI"},
+  {oc:"TS_CI",od:"L-GCOM",dc:"TL",dd:"0627",dn:"Gestión administrativa del comercio internacional"},
+  {oc:"TS_CI",od:"L-TRANS",dc:"TL",dd:"0622",dn:"Transporte internacional de mercancías"},
+  {oc:"TS_CI",od:"L-ALM",dc:"TL",dd:"0625",dn:"Logística de almacenamiento"},
+  {oc:"TS_GCM",od:"L-LOG2",dc:"CI",dd:"0625",dn:"Logística de almacenamiento"},
+  {oc:"TS_GCM",od:"L-LOG2",dc:"MK",dd:"0930",dn:"Políticas de marketing"},
+  {oc:"TS_GCM",od:"CICLO",dc:"CI",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo TS GCM"},
+  {oc:"TS_GCM",od:"CICLO",dc:"MK",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo TS GCM"},
+  {oc:"TS_GT",od:"L-GCOM2",dc:"TL",dd:"0627",dn:"Gestión administrativa del comercio internacional"},
+  {oc:"TS_GT",od:"L-TRANS2",dc:"TL",dd:"0622",dn:"Transporte internacional de mercancías"},
+  {oc:"TS_GT",od:"L-LOG3",dc:"TL",dd:"0625",dn:"Logística de almacenamiento"},
+  {oc:"TS_GT",od:"L-TP",dc:"TL",dd:"0628",dn:"Organización del transporte de viajeros"},
+  {oc:"TS_GT",od:"L-SERV",dc:"TL",dd:"0629",dn:"Organización del transporte de mercancías"},
+  {oc:"TS_GT",od:"L-GCOM2",dc:"CI",dd:"0627",dn:"Gestión administrativa del comercio internacional"},
+  {oc:"TS_GT",od:"L-TRANS2",dc:"CI",dd:"0622",dn:"Transporte internacional de mercancías"},
+  {oc:"TS_GT",od:"L-LOG3",dc:"CI",dd:"0625",dn:"Logística de almacenamiento"},
+  {oc:"TS_GT",od:"CICLO",dc:"CI",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo TS GT"},
+  {oc:"TS_GT",od:"CICLO",dc:"AF",dd:"0623",dn:"Gestión económica y financiera de la empresa",nota:"Ciclo completo TS GT"},
+  {oc:"TS_ASI",od:"L-SIS",dc:"ASIR",dd:"0369",dn:"Implantación de sistemas operativos"},
+  {oc:"TS_ASI",od:"L-SIS",dc:"ASIR",dd:"0370",dn:"Planificación y administración de redes"},
+  {oc:"TS_ASI",od:"L-BBDD",dc:"ASIR",dd:"0372",dn:"Gestión de bases de datos"},
+  {oc:"TS_ASI",od:"L-BBDD",dc:"ASIR",dd:"0377",dn:"Administración de sistemas gestores de bases de datos"},
+  {oc:"TS_EXSI",od:"L-INS1",dc:"SMR",dd:"0225",dn:"Redes locales"},
+  {oc:"TS_EXSI",od:"L-INS2",dc:"SMR",dd:"0221",dn:"Montaje y mantenimiento de equipos"},
+  {oc:"TS_EXSI",od:"L-OFI",dc:"SMR",dd:"0223",dn:"Aplicaciones ofimáticas"},
+  {oc:"TS_EXSI",od:"L-WEB",dc:"SMR",dd:"0227",dn:"Servicios de red"},
+  {oc:"TS_EXSI",od:"L-PORT",dc:"SMR",dd:"0228",dn:"Aplicaciones web"},
+  {oc:"TS_EXSI",od:"L-SO",dc:"SMR",dd:"0222",dn:"Sistemas operativos monopuesto"},
+  {oc:"TS_EXSI",od:"L-SO",dc:"SMR",dd:"0224",dn:"Sistemas operativos en red"},
+  {oc:"TS_DAI",od:"L-SIM",dc:"DAM",dd:"0483",dn:"Sistemas informáticos"},
+  {oc:"TS_DAI",od:"L-BBDD2",dc:"DAM",dd:"0484",dn:"Bases de datos"},
+  {oc:"TS_DAI",od:"L-APP",dc:"DAM",dd:"0486",dn:"Acceso a datos"},
+  {oc:"TS_DAI",od:"L-PROG",dc:"DAM",dd:"0485",dn:"Programación"},
+  {oc:"TS_DAI",od:"L-ANALIS",dc:"DAM",dd:"0487",dn:"Entornos de desarrollo"},
+  {oc:"TS_DAI",od:"L-DISE",dc:"DAM",dd:"0488",dn:"Desarrollo de interfaces"},
+  {oc:"TS_DAI",od:"L-SIM",dc:"DAW",dd:"0483",dn:"Sistemas informáticos"},
+  {oc:"TS_DAI",od:"L-BBDD2",dc:"DAW",dd:"0484",dn:"Bases de datos"},
+  {oc:"TS_DAI",od:"L-PROG",dc:"DAW",dd:"0485",dn:"Programación"},
+  {oc:"TS_DAI",od:"L-ANALIS",dc:"DAW",dd:"0487",dn:"Entornos de desarrollo"},
+];
+const ORIGENES_LOE=[
+  {id:"GA",nom:"Gestión Administrativa (GM)",rd:"RD 1631/2009"},
+  {id:"AF",nom:"Administración y Finanzas (GS)",rd:"RD 1584/2011"},
+  {id:"MK",nom:"Marketing y Publicidad (GS)",rd:"RD 1571/2011"},
+  {id:"CI",nom:"Comercio Internacional (GS)",rd:"RD 1574/2011"},
+  {id:"TL",nom:"Transporte y Logística (GS)",rd:"RD 1572/2011"},
+  {id:"SMR",nom:"Sistemas Microinformáticos y Redes (GM)",rd:"RD 1691/2007"},
+  {id:"DAW",nom:"Desarrollo de Aplicaciones Web (GS)",rd:"RD 686/2010"},
+  {id:"DAM",nom:"Desarrollo de Aplicaciones Multiplataforma (GS)",rd:"RD 450/2010"},
+  {id:"ASIR",nom:"Administración de Sistemas Informáticos en Red (GS)",rd:"RD 1629/2009"},
+  {id:"ME",nom:"Mantenimiento Electrónico (GS)",rd:"RD 1578/2011"},
+  {id:"GAS",nom:"Gestión de Ventas y Espacios Comerciales (GS)",rd:"RD 1573/2011"},
+  {id:"AD",nom:"Asistencia a la Dirección (GS)",rd:"RD 1582/2011"},
+  {id:"ANIM3D",nom:"Animaciones 3D, Juegos y Entornos Interactivos (GS)",rd:"RD 1583/2011"},
+];
+const ORIGENES_LOGSE=[
+  {id:"TGA",nom:"Técnico en Gestión Administrativa"},
+  {id:"TS_SEC",nom:"T.S. en Secretariado"},
+  {id:"TS_AF",nom:"T.S. en Administración y Finanzas"},
+  {id:"TS_CI",nom:"T.S. en Comercio Internacional"},
+  {id:"TS_GCM",nom:"T.S. en Gestión Comercial y Marketing"},
+  {id:"TS_GT",nom:"T.S. en Gestión del Transporte"},
+  {id:"TS_ASI",nom:"T.S. en Administración de Sistemas Informáticos"},
+  {id:"TS_EXSI",nom:"T.S. en Explotación de Sistemas Informáticos"},
+  {id:"TS_DAI",nom:"T.S. en Desarrollo de Aplicaciones Informáticas"},
+];
+
+function isGeneric(id){return GENERICAS.some(g=>g.id===id);}
+function isLogse(id){return ORIGENES_LOGSE.some(x=>x.id===id);}
+function isLoe(id){return ORIGENES_LOE.some(x=>x.id===id);}
+
+const selDest=document.getElementById("sel-dest");
+CICLOS_DEST.forEach(c=>{const o=document.createElement("option");o.value=c.id;o.textContent=c.nom;selDest.appendChild(o);});
+selDest.addEventListener("change",calcular);
+
+const selOrig=document.getElementById("sel-orig");
+const grGen=document.createElement("optgroup");grGen.label="Situaciones genéricas / certificaciones";
+GENERICAS.forEach(g=>{const o=document.createElement("option");o.value=g.id;o.textContent=g.nom;grGen.appendChild(o);});
+selOrig.appendChild(grGen);
+const grLoe=document.createElement("optgroup");grLoe.label="Titulaciones LOE";
+ORIGENES_LOE.forEach(c=>{const o=document.createElement("option");o.value=c.id;o.textContent=`${c.nom} · ${c.rd}`;grLoe.appendChild(o);});
+selOrig.appendChild(grLoe);
+const grLogse=document.createElement("optgroup");grLogse.label="Titulaciones LOGSE";
+ORIGENES_LOGSE.forEach(c=>{const o=document.createElement("option");o.value=c.id;o.textContent=c.nom;grLogse.appendChild(o);});
+selOrig.appendChild(grLogse);
+
+function onOrigenChange(){
+  const id=selOrig.value;
+  const modSel=document.getElementById("mod-selector");
+  const grid=document.getElementById("mod-grid");
+  const lbl=document.getElementById("modsel-label");
+  grid.innerHTML="";allChecked=false;document.getElementById("btn-all").textContent="marcar todos";
+  let mods=[];
+  if(!id){modSel.style.display="none";calcular();return;}
+  if(isGeneric(id)){mods=GENERICAS.find(x=>x.id===id).checks;lbl.textContent="Marca lo que tiene acreditado";}
+  else if(isLogse(id)){mods=MODS_LOGSE[id]||[];lbl.textContent="Módulos LOGSE superados";}
+  else{mods=MODS[id]||[];lbl.textContent="Módulos LOE superados";}
+  mods.forEach(m=>{
+    const lbEl=document.createElement("label");lbEl.className="mod-check";
+    const dc=m.cod==="CICLO"?"CICLO COMPLETO":m.cod;
+    lbEl.innerHTML=`<input type="checkbox" value="${m.cod}" onchange="calcular()"><span><code>${dc}</code>${m.nom}</span>`;
+    grid.appendChild(lbEl);
+  });
+  modSel.style.display=mods.length?"block":"none";
+  calcular();
+}
+
+let allChecked=false;
+function toggleAll(){
+  allChecked=!allChecked;
+  document.querySelectorAll("#mod-grid input").forEach(i=>i.checked=allChecked);
+  document.getElementById("btn-all").textContent=allChecked?"desmarcar todos":"marcar todos";
+  calcular();
+}
+function getSel(){return Array.from(document.querySelectorAll("#mod-grid input:checked")).map(i=>i.value);}
+
+function getIdenticos(origId,destId){
+  if(!isLoe(origId)||!MODS[origId]||!MODS[destId])return[];
+  const excl=["FOL","EIE","CICLO","ING_CCAA","1708","1665"];
+  return(MODS[origId]||[]).filter(m=>!excl.includes(m.cod)&&(MODS[destId]||[]).some(x=>x.cod===m.cod));
+}
+
+function calcular(){
+  const orig=selOrig.value,dest=selDest.value;
+  const resEl=document.getElementById("results");
+  if(!orig||!dest){resEl.innerHTML='<div class="empty"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Selecciona origen y destino para consultar las convalidaciones posibles</div>';return;}
+  const sel=getSel();
+  if(!sel.length){resEl.innerHTML='<div class="empty"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Marca al menos un módulo del origen para ver las convalidaciones posibles</div>';return;}
+  const destC=CICLOS_DEST.find(c=>c.id===dest);
+  const grado=destC?destC.grado:"superior";
+  let html="";
+
+  const idents=getIdenticos(orig,dest).filter(m=>sel.includes(m.cod));
+  if(idents.length){
+    html+=sec("Traslado automático de calificación",idents.length,"#1a7a3c");
+    idents.forEach(m=>{html+=`<div class="item item-ident"><div class="item-cod">${m.cod}</div><div class="item-body"><div class="item-nom">${m.nom}</div><div class="item-tags"><span class="item-tag">Módulo idéntico</span><span class="item-tag">Art. 3.2 RD 1085/2020</span><span class="item-tag">Sin solicitud formal</span></div></div></div>`;});
+    html+="</div>";
+  }
+
+  const identCods=idents.map(m=>m.cod);
+  let equiv=[];
+  if(!isGeneric(orig)){
+    const ap=REGLAS.filter(r=>r.oc===orig&&r.dc===dest&&(r.od==="CICLO"?sel.includes("CICLO"):sel.includes(r.od)));
+    const seen=new Set();
+    equiv=ap.filter(r=>!identCods.includes(r.dd)&&!seen.has(r.dd)&&seen.add(r.dd));
+  }
+  if(sel.includes("1708")||sel.includes("SOST")){equiv.push({dd:"1708",dn:"Sostenibilidad aplicada al sistema productivo",od:"1708",nota:"Módulo idéntico — misma familia profesional"});}
+  if((sel.includes("1665")||sel.includes("DIGIT"))&&grado==="superior"){equiv.push({dd:"1665",dn:"Digitalización aplicada a los sectores productivos",od:"1665",nota:"Módulo idéntico — GS misma familia profesional"});}
+
+  if(equiv.length){
+    html+=sec("Convalidaciones por equivalencia",equiv.length,"#1a6fd4");
+    const srcMods=isLogse(orig)?(MODS_LOGSE[orig]||[]):(MODS[orig]||[]);
+    equiv.forEach(r=>{
+      let srcNom=r.od==="CICLO"?"Ciclo completo":r.od==="1708"?"1708 Sostenibilidad (origen)":r.od==="1665"?"1665 Digitalización (origen)":r.od==="SOST"?"1708 Sostenibilidad (misma familia)":r.od==="DIGIT"?"1665 Digitalización (GS misma familia)":(srcMods.find(m=>m.cod===r.od)||{nom:r.od}).nom;
+      html+=`<div class="item"><div class="item-cod">${r.dd}</div><div class="item-body"><div class="item-nom">${r.dn}</div><div class="item-src">Aportando: ${srcNom}</div><div class="item-tags">${r.nota?`<span class="item-tag">${r.nota}</span>`:""}<span class="item-tag">RD 1085/2020</span><span class="item-tag">Resolución centro</span></div></div></div>`;
+    });
+    html+="</div>";
+  }
+
+  const hayFOL=sel.includes("FOL_LOE")||sel.includes("FOL")||sel.includes("FOL_LOGSE")||sel.includes("PRP_LOGSE")||sel.includes("CICLO");
+  if(hayFOL){
+    html+=sec("Módulo transversal — empleabilidad",1,"#1a7a3c");
+    let src="FOL (LOE) de cualquier ciclo";let tag="RD 1085/2020 DA 6ª + DA 3ª";
+    if(sel.includes("FOL_LOGSE")){src="FOL (LOGSE) + certificado nivel básico prevención (RD 39/1997)";}
+    if(sel.includes("PRP_LOGSE")){src="CFGS Prevención de Riesgos Profesionales (LOGSE)";tag="DA 2ª RD 1085/2020";}
+    html+=`<div class="item"><div class="item-cod">ITPE I</div><div class="item-body"><div class="item-nom">Itinerario personal para la empleabilidad I</div><div class="item-src">${src}</div><div class="item-tags"><span class="item-tag">${tag}</span><span class="item-tag">Resolución centro</span></div></div></div>`;
+    html+="</div>";
+  }
+
+  const hayEIE=sel.includes("EIE_LOE")||sel.includes("EIE")||sel.includes("AGYPE_LOGSE")||sel.includes("FAG_CICLO")||sel.includes("FCM_CICLO")||sel.includes("CICLO");
+  if(hayEIE){
+    html+=sec("Módulo transversal — emprendimiento",1,"#1a7a3c");
+    let src2="EIE (LOE) de cualquier ciclo";
+    if(sel.includes("AGYPE_LOGSE")) src2="Administración, gestión y comercialización en la pequeña empresa (LOGSE)";
+    if(sel.includes("FAG_CICLO")) src2="Ciclo completo GM/GS de la familia Administración y Gestión";
+    if(sel.includes("FCM_CICLO")) src2="Ciclo completo GM/GS de la familia Comercio y Marketing";
+    html+=`<div class="item"><div class="item-cod">ITPE II</div><div class="item-body"><div class="item-nom">Itinerario personal para la empleabilidad II</div><div class="item-src">${src2}</div><div class="item-tags"><span class="item-tag">RD 1085/2020 DA 6ª + RD 659/2023 art.127</span><span class="item-tag">Resolución centro</span></div></div></div>`;
+    html+="</div>";
+  }
+
+  const ingChecks=sel.filter(s=>s.startsWith("ING_"));
+  const hayIngCCAA=sel.includes("ING_CCAA");
+  if(ingChecks.length||hayIngCCAA){
+    const ingCod=grado==="medio"?"0156":"0179";
+    const ingNom=`Inglés Profesional (${grado==="medio"?"0156 — GM":"0179 — GS"})`;
+    const validos=[];const noValidos=[];
+    if(hayIngCCAA) validos.push("Módulo de inglés de otra CCAA — verificar equivalencia de nivel y contenido. Sujeto a criterio del centro.");
+    if(sel.includes("ING_0179")) validos.push("0179 Inglés Profesional GS — misma familia o con correspondencia CAM (Res. 28/06/2022)");
+    if(sel.includes("ING_0156")&&grado==="medio") validos.push("0156 Inglés Profesional GM — misma familia o con correspondencia CAM (Res. 28/06/2022)");
+    if(sel.includes("ING_0156")&&grado==="superior") noValidos.push("0156 (GM) no es válido para convalidar 0179 (GS).");
+    if(sel.includes("ING_CM14")) validos.push("CM14 Inglés técnico GS — misma familia o con correspondencia CAM");
+    if(sel.includes("ING_CM16")) validos.push("CM16 Lengua extranjera profesional GS — misma familia o con correspondencia CAM");
+    if(sel.includes("ING_CM13")&&grado==="medio") validos.push("CM13 Inglés técnico GM — misma familia o con correspondencia CAM");
+    if(sel.includes("ING_CM13")&&grado==="superior") noValidos.push("CM13 (módulo de GM) no es válido para convalidar el inglés de GS.");
+    if(sel.includes("ING_CM15")&&grado==="medio") validos.push("CM15 Lengua extranjera profesional GM — misma familia o con correspondencia CAM");
+    if(sel.includes("ING_CM15")&&grado==="superior") noValidos.push("CM15 (módulo de GM) no es válido para convalidar el inglés de GS.");
+    if(sel.includes("ING_EOI_B2")) validos.push("Certificado B2 o superior — EOI española (RD 1629/2006)");
+    if(sel.includes("ING_EOI_B1")&&grado==="medio") validos.push("Certificado B1 — EOI española (RD 1629/2006)");
+    if(sel.includes("ING_EOI_B1")&&grado==="superior") noValidos.push("B1 EOI solo es válido para GM. Para GS se requiere mínimo B2.");
+    if(sel.includes("ING_GRADO")) validos.push("Grado en Filología Inglesa o Traducción e Interpretación (inglés)");
+    html+=sec("Inglés Profesional",validos.length+noValidos.length,"#8a6000");
+    if(validos.length) html+=`<div class="item"><div class="item-cod">${ingCod}</div><div class="item-body"><div class="item-nom">${ingNom}</div><div class="item-src">${validos.join("<br>")}</div><div class="item-tags"><span class="item-tag">Guía CAM 2024-2025</span><span class="item-tag">Art. 3.7 RD 1085/2020</span><span class="item-tag">Resolución centro</span></div></div></div>`;
+    noValidos.forEach(w=>{html+=`<div class="warn-box">⚠ ${w}</div>`;});
+    if(hayIngCCAA) html+=`<div class="info-box">ℹ En Madrid solo se admiten certificaciones de EOI española con carácter general. Un módulo con código propio de otra CCAA requiere valoración individualizada del centro. Guía CAM 2024-2025.</div>`;
+    html+="</div>";
+  }
+
+  if(!idents.length&&!equiv.length&&!hayFOL&&!hayEIE&&!(ingChecks.length||hayIngCCAA)){
+    html=`<div class="card"><div class="nota-empty">ℹ No se han encontrado convalidaciones para los módulos seleccionados en esta combinación.</div></div>`;
+  }
+  resEl.innerHTML=html;
+}
+
+function sec(titulo,n,color){
+  return`<div class="card"><div class="section"><div class="sec-title"><span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span>${titulo}<span class="badge">${n}</span></div>`;
+}
+</script>
+</body>
+</html>

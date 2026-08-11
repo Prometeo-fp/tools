@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unidades de Competencia · UC ⇄ Módulos FP</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F0F2F5;
+    --surface: #FFFFFF;
+    --surface2: #E8ECF0;
+    --border: #D0D6DE;
+    --text: #0B1829;
+    --text2: #5A6778;
+    --accent: #FF5A1F;
+    --accent-light: #FFF0EB;
+    --green: #1A8A50;
+    --green-light: #E5F5ED;
+    --amber: #C47A00;
+    --amber-light: #FFF7E0;
+    --red: #C0392B;
+    --red-light: #FBEAE8;
+    --blue: #1E5FA8;
+    --blue-light: #EAF1FB;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(11,24,41,.08), 0 4px 12px rgba(11,24,41,.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .mono { font-family: 'DM Mono', monospace; }
+
+  header { background: #0B1829; color: white; padding: 0 32px; display: flex; align-items: center; gap: 14px; height: 58px; border-bottom: 3px solid var(--accent); }
+  header .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  header .logo-name { font-size: 15px; font-weight: 700; letter-spacing: -.2px; }
+  header .logo-sub { color: rgba(255,255,255,.45); font-weight: 400; font-size: 13px; margin-left: 2px; }
+  header .tag { margin-left: auto; font-size: 11px; font-weight: 600; background: rgba(255,90,31,.2); color: #FF8A5A; padding: 3px 10px; border-radius: 20px; letter-spacing: .5px; text-transform: uppercase; }
+
+  .container { max-width: 1160px; margin: 0 auto; padding: 28px 24px; display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
+  @media(max-width:900px){ .container { grid-template-columns: 1fr; } }
+
+  .card { background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); box-shadow: var(--shadow); }
+  .card-header { padding: 18px 22px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+  .card-header h2 { font-size: 14px; font-weight: 600; }
+  .card-header .step { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: white; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .card-body { padding: 20px 22px; }
+
+  .modo-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .modo-btn { border: 2px solid var(--border); background: var(--surface); border-radius: 10px; padding: 14px 16px; cursor: pointer; text-align: left; transition: all .15s; font-family: inherit; display: flex; align-items: center; gap: 12px; }
+  .modo-btn:hover { border-color: var(--accent); background: var(--accent-light); }
+  .modo-btn.active { border-color: var(--accent); background: var(--accent); box-shadow: 0 2px 10px rgba(255,90,31,.25); }
+  .modo-btn.active .modo-name { color: white; }
+  .modo-btn.active .modo-sub { color: rgba(255,255,255,.75); }
+  .modo-btn .modo-icon { font-size: 22px; flex-shrink: 0; }
+  .modo-btn .modo-name { font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.25; }
+  .modo-btn .modo-sub { font-size: 11.5px; color: var(--text2); margin-top: 2px; }
+
+  .ciclo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 9px; margin-top: 16px; }
+  .ciclo-btn { border: 2px solid var(--border); background: var(--surface); border-radius: 8px; padding: 12px 14px; cursor: pointer; text-align: left; transition: all .15s; font-family: inherit; }
+  .ciclo-btn:hover { border-color: var(--accent); background: var(--accent-light); }
+  .ciclo-btn.active { border-color: var(--accent); background: var(--accent-light); box-shadow: 0 0 0 3px rgba(255,90,31,.12); }
+  .ciclo-btn .ciclo-code { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .ciclo-btn .ciclo-name { font-size: 12.5px; font-weight: 500; color: var(--text); line-height: 1.3; }
+
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+  .filter-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .filter-row input[type=text] { flex: 1; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13.5px; font-family: inherit; color: var(--text); background: var(--surface); }
+  .filter-row input[type=text]:focus { outline: none; border-color: var(--accent); }
+
+  .list-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin: 4px 0 10px; display: flex; align-items: center; gap: 8px; }
+  .list-count { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; background: var(--surface2); color: var(--text); }
+  .group-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; color: var(--text2); margin: 12px 0 6px; }
+  .group-label:first-child { margin-top: 0; }
+
+  .item-list { display: flex; flex-direction: column; gap: 6px; max-height: 420px; overflow-y: auto; padding-right: 2px; }
+  .item-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: all .12s; user-select: none; }
+  .item-row:hover { background: var(--surface2); }
+  .item-row.selected { background: var(--accent-light); border-color: var(--accent); }
+  .item-row.checked { background: var(--green-light); border-color: #A8D9BB; }
+  .item-row .check { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: #fff; transition: all .12s; }
+  .item-row.checked .check { background: var(--green); border-color: var(--green); }
+  .item-row.checked .check::after { content: '✓'; color: #fff; font-size: 11px; font-weight: 700; }
+  .item-row .item-code { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0; min-width: 62px; }
+  .item-row .item-name { font-size: 13px; flex: 1; line-height: 1.3; }
+  .empty-hint { text-align: center; padding: 24px 12px; color: var(--text2); font-size: 12.5px; }
+
+  .quick-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .btn-quick { flex: 1; padding: 7px 10px; border: 1px solid var(--border); background: var(--surface); border-radius: 6px; font-family: inherit; font-size: 11px; font-weight: 600; cursor: pointer; transition: all .12s; color: var(--text2); }
+  .btn-quick:hover { background: var(--surface2); color: var(--text); }
+
+  .resumen-item { padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .resumen-item:last-child { border-bottom: none; }
+  .resumen-item .ri-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 4px; }
+  .resumen-item .ri-name { font-size: 13.5px; font-weight: 600; line-height: 1.35; }
+  .resumen-item .ri-sub { font-size: 11.5px; color: var(--text2); line-height: 1.4; }
+  .status-pill { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; flex-shrink: 0; }
+  .status-ok { background: var(--green-light); color: var(--green); }
+  .status-warn { background: var(--amber-light); color: var(--amber); }
+  .status-none { background: var(--red-light); color: var(--red); }
+
+  .cert-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+  .cert-chip { font-size: 11.5px; padding: 6px 9px; border-radius: 6px; background: var(--surface2); color: var(--text); line-height: 1.35; }
+  .cert-chip .cert-code { font-family: 'DM Mono', monospace; font-weight: 700; color: var(--blue); margin-right: 6px; }
+
+  .alert { border-radius: 8px; padding: 11px 13px; font-size: 12px; line-height: 1.5; display: flex; gap: 9px; margin-top: 8px; }
+  .alert-amber { background: var(--amber-light); color: var(--amber); border: 1px solid #E8C97A; }
+  .alert-red   { background: var(--red-light); color: var(--red); border: 1px solid #ECB6AF; }
+  .alert-blue  { background: var(--blue-light); color: var(--blue); border: 1px solid #A3C5EC; }
+  .alert-icon  { flex-shrink: 0; }
+
+  .panel-sticky { position: sticky; top: 24px; }
+  .empty-state { text-align: center; padding: 36px 20px; color: var(--text2); }
+  .empty-state .icon { font-size: 30px; margin-bottom: 10px; }
+  .empty-state p { font-size: 13px; line-height: 1.5; }
+
+  footer { text-align: center; padding: 22px; font-size: 12px; color: var(--text2); }
+  @media(max-width:600px){ .modo-tabs { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <span class="logo-dot"></span>
+  <span class="logo-name">Unidades de Competencia</span>
+  <span class="logo-sub">UC ⇄ Módulos FP</span>
+  <div class="tag">SEPE</div>
+</header>
+
+<div class="container">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="step">1</div>
+        <h2>Elige cómo quieres buscar</h2>
+      </div>
+      <div class="card-body">
+        <div class="modo-tabs" id="modoTabs">
+          <button class="modo-btn" data-modo="A">
+            <div class="modo-icon">🎓</div>
+            <div>
+              <div class="modo-name">Tengo estas competencias</div>
+              <div class="modo-sub">Busco por UC acreditadas</div>
+            </div>
+          </button>
+          <button class="modo-btn" data-modo="B">
+            <div class="modo-icon">📘</div>
+            <div>
+              <div class="modo-name">Quiero convalidar un módulo</div>
+              <div class="modo-sub">Busco por módulo del ciclo</div>
+            </div>
+          </button>
+          <button class="modo-btn" data-modo="C">
+            <div class="modo-icon">📜</div>
+            <div>
+              <div class="modo-name">Aporto un certificado completo</div>
+              <div class="modo-sub">Marca sus UC automáticamente</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="step">2</div>
+        <h2 id="step2Title">Elige el ciclo formativo</h2>
+      </div>
+      <div class="card-body">
+        <div class="ciclo-grid" id="cicloGrid" style="margin-top:0"></div>
+
+        <div class="divider"></div>
+
+        <div class="filter-row">
+          <input type="text" id="filterBox" placeholder="Filtrar la lista de abajo...">
+        </div>
+        <div class="list-label">
+          <span id="listLabel">UC disponibles</span>
+          <span class="list-count" id="listCount">0</span>
+          <span class="list-count" id="selCount" style="display:none;background:var(--green-light);color:var(--green)">0 seleccionadas</span>
+        </div>
+        <div class="item-list" id="itemList"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel-sticky">
+    <div class="card">
+      <div class="card-header">
+        <div class="step">3</div>
+        <h2>Resultado</h2>
+      </div>
+      <div class="card-body" id="resultBody">
+        <div class="empty-state">
+          <div class="icon">📋</div>
+          <p>Elige un modo, un ciclo, y selecciona una competencia o un módulo de la lista para ver el resultado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Uso interno · Centro de FP · Fuente: Repertorio Nacional de Certificados de Profesionalidad (SEPE)</footer>
+
+<script id="tool-data" type="application/json">
+{"DAM": {"nombre": "Desarrollo de Aplicaciones Multiplataforma (DAM)", "modules": [{"modulo": "0483. Sistemas informáticos", "grouped": false, "ucs": [{"uc": "UC0223_3", "denom": "Configurar y explotar sistemas informáticos", "certs": [{"code": "IFCD0111", "name": "Programación en lenguajes estructurados de aplicaciones de gestión", "family": "Informática Y Comunicaciones"}, {"code": "IFCD0112", "name": "Programación con lenguajes orientados a objetos y bases de datos relacionales", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0310", "name": "Administración de bases de datos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0484. Bases de Datos", "grouped": false, "ucs": [{"uc": "UC0226_3", "denom": "Programar bases de datos relacionales", "certs": [{"code": "IFCD0111", "name": "Programación en lenguajes estructurados de aplicaciones de gestión", "family": "Informática Y Comunicaciones"}, {"code": "IFCD0112", "name": "Programación con lenguajes orientados a objetos y bases de datos relacionales", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0486. Acceso a datos / 0485. Programación", "grouped": false, "ucs": [{"uc": "UC0227_3", "denom": "Desarrollar componentes software en lenguajes de programación orientados a objetos", "certs": [{"code": "IFCD0112", "name": "Programación con lenguajes orientados a objetos y bases de datos relacionales", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0488. Desarrollo de interfaces", "grouped": false, "ucs": [{"uc": "UC0494_3", "denom": "Desarrollar componentes software en lenguajes de programación estructurada", "certs": [{"code": "IFCD0111", "name": "Programación en lenguajes estructurados de aplicaciones de gestión", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0490. Programación de servicios y procesos", "grouped": false, "ucs": [{"uc": "UC0964_3", "denom": "Crear elementos software para la gestión del sistema y sus recursos", "certs": [{"code": "IFCT0609", "name": "Programación de sistemas informáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0491. Sistemas de gestión empresarial", "grouped": false, "ucs": [{"uc": "UC1213_3", "denom": "Instalar y configurar sistemas de planificación de recursos empresariales y de gestión de relaciones con clientes", "certs": [{"code": "IFCT0610", "name": "Administración y programación en sistemas de planificación de recursos empresariales y de gestión de relaciones con clientes", "family": "Informática Y Comunicaciones"}]}]}]}, "DAW": {"nombre": "Desarrollo de Aplicaciones Web (DAW)", "modules": [{"modulo": "0483. Sistemas informáticos", "grouped": false, "ucs": [{"uc": "UC0223_3", "denom": "Configurar y explotar sistemas informáticos", "certs": [{"code": "IFCD0111", "name": "Programación en lenguajes estructurados de aplicaciones de gestión", "family": "Informática Y Comunicaciones"}, {"code": "IFCD0112", "name": "Programación con lenguajes orientados a objetos y bases de datos relacionales", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0310", "name": "Administración de bases de datos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0484. Bases de Datos", "grouped": false, "ucs": [{"uc": "UC0226_3", "denom": "Programar bases de datos relacionales", "certs": [{"code": "IFCD0111", "name": "Programación en lenguajes estructurados de aplicaciones de gestión", "family": "Informática Y Comunicaciones"}, {"code": "IFCD0112", "name": "Programación con lenguajes orientados a objetos y bases de datos relacionales", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0612. Desarrollo Web en entorno cliente / 0615. Diseño de Interfaces Web", "grouped": false, "ucs": [{"uc": "UC0491_3", "denom": "Desarrollar elementos software en el entorno cliente", "certs": [{"code": "IFCD0210", "name": "Desarrollo de aplicaciones con tecnologías web", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0613. Desarrollo Web en entorno servidor", "grouped": false, "ucs": [{"uc": "UC0492_3", "denom": "Desarrollar elementos software en el entorno servidor", "certs": [{"code": "IFCD0210", "name": "Desarrollo de aplicaciones con tecnologías web", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0614. Despliegue de aplicaciones Web", "grouped": false, "ucs": [{"uc": "UC0493_3", "denom": "Implementar, verificar y documentar aplicaciones web en entornos internet, intranet y extranet", "certs": [{"code": "IFCD0210", "name": "Desarrollo de aplicaciones con tecnologías web", "family": "Informática Y Comunicaciones"}]}]}]}, "ASIR": {"nombre": "Administración de Sistemas Informáticos en Red (ASIR)", "modules": [{"modulo": "0369. Implantación de sistemas operativos", "grouped": false, "ucs": [{"uc": "UC0485_3", "denom": "Instalar, configurar y administrar el software de base y de aplicación del sistema", "certs": [{"code": "IFCT0510", "name": "Gestión de sistemas informáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0371. Fundamentos de hardware", "grouped": false, "ucs": [{"uc": "UC0484_3", "denom": "Administrar los dispositivos hardware del sistema", "certs": [{"code": "IFCT0510", "name": "Gestión de sistemas informáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0371. Fundamentos de hardware", "grouped": false, "ucs": [{"uc": "UC0223_3", "denom": "Configurar y explotar sistemas informáticos", "certs": [{"code": "IFCD0111", "name": "Programación en lenguajes estructurados de aplicaciones de gestión", "family": "Informática Y Comunicaciones"}, {"code": "IFCD0112", "name": "Programación con lenguajes orientados a objetos y bases de datos relacionales", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0310", "name": "Administración de bases de datos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0372. Gestión de bases de datos", "grouped": false, "ucs": [{"uc": "UC0225_3", "denom": "Configurar y gestionar la base de datos", "certs": [{"code": "IFCT0310", "name": "Administración de bases de datos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0374. Administración de sistemas operativos", "grouped": true, "ucs": [{"uc": "UC0490_3", "denom": "Gestionar servicios en el sistema informático", "certs": [{"code": "IFCT0109", "name": "Seguridad informática", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0409", "name": "Implantación y gestión de elementos informáticos en sistemas domóticos/inmóticos, de control de accesos y presencia y de videovigilancia", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0509", "name": "Administración de servicios de internet", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0609", "name": "Programación de sistemas informáticos", "family": "Informática Y Comunicaciones"}]}, {"uc": "UC0485_3", "denom": "Instalar, configurar y administrar el software de base y de aplicación del sistema", "certs": [{"code": "IFCT0510", "name": "Gestión de sistemas informáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0375. Servicios de red e Internet", "grouped": true, "ucs": [{"uc": "UC0495_3", "denom": "Instalar, configurar y administrar el software para gestionar un entorno Web", "certs": [{"code": "IFCT0509", "name": "Administración de servicios de internet", "family": "Informática Y Comunicaciones"}]}, {"uc": "UC0496_3", "denom": "Instalar, configurar y administrar servicios de mensajería electrónica", "certs": [{"code": "IFCT0509", "name": "Administración de servicios de internet", "family": "Informática Y Comunicaciones"}]}, {"uc": "UC0497_3", "denom": "Instalar, configurar y administrar servicios de transferencia de archivos y multimedia", "certs": [{"code": "IFCT0509", "name": "Administración de servicios de internet", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0376. Implantación de aplicaciones Web", "grouped": false, "ucs": [{"uc": "UC0493_3", "denom": "Implementar, verificar y documentar aplicaciones Web en entornos Internet, intranet y extranet", "certs": [{"code": "IFCD0210", "name": "Desarrollo de aplicaciones con tecnologías web", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0377. Administración de sistemas gestores de bases de datos", "grouped": false, "ucs": [{"uc": "UC0224_3", "denom": "Configurar y gestionar un sistema gestor de bases de datos", "certs": [{"code": "IFCT0310", "name": "Administración de bases de datos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0378. Seguridad y alta disponibilidad", "grouped": false, "ucs": [{"uc": "UC0486_3", "denom": "Asegurar equipos informáticos", "certs": [{"code": "IFCT0109", "name": "Seguridad informática", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0510", "name": "Gestión de sistemas informáticos", "family": "Informática Y Comunicaciones"}]}]}]}, "SMR": {"nombre": "Sistemas Microinformáticos y Redes (SMR)", "modules": [{"modulo": "0222. Sistemas operativos monopuesto", "grouped": false, "ucs": [{"uc": "UC0219_2", "denom": "Instalar y configurar el software base en sistemas microinformáticos", "certs": [{"code": "IFCT0209", "name": "Sistemas microinformáticos", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0210", "name": "Operación de sistemas informáticos", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0309", "name": "Montaje y reparación de sistemas microinformáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0222. Sistemas operativos monopuesto / 0226. Seguridad Informática", "grouped": false, "ucs": [{"uc": "UC0958_2", "denom": "Ejecutar procedimientos de administración y mantenimiento en el software base y de aplicación de clientes", "certs": [{"code": "IFCT0210", "name": "Operación de sistemas informáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0225. Redes locales", "grouped": false, "ucs": [{"uc": "UC0220_2", "denom": "Instalar, configurar y verificar los elementos de la red local según procedimientos establecidos", "certs": [{"code": "IFCT0110", "name": "Operacion de redes departamentales", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0209", "name": "Sistemas microinformáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0223. Aplicaciones ofimáticas", "grouped": false, "ucs": [{"uc": "UC0221_2", "denom": "Instalar, configurar y mantener paquetes informáticos de propósito general y aplicaciones específicas", "certs": [{"code": "IFCT0209", "name": "Sistemas microinformáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0223. Aplicaciones ofimáticas", "grouped": false, "ucs": [{"uc": "UC0222_2", "denom": "Facilitar al usuario la utilización de paquetes informáticos de propósito general y aplicaciones específicas", "certs": [{"code": "IFCT0209", "name": "Sistemas microinformáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0221. Montaje y mantenimiento de equipos", "grouped": false, "ucs": [{"uc": "UC0953_2", "denom": "Montar equipos microinformáticos", "certs": [{"code": "IFCT0309", "name": "Montaje y reparación de sistemas microinformáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0221. Montaje y mantenimiento de equipos", "grouped": false, "ucs": [{"uc": "UC0954_2", "denom": "Reparar y ampliar equipamiento microinformático", "certs": [{"code": "IFCT0309", "name": "Montaje y reparación de sistemas microinformáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0226. Seguridad informática", "grouped": false, "ucs": [{"uc": "UC0957_2", "denom": "Mantener y regular el subsistema físico en sistemas informáticos", "certs": [{"code": "IFCT0210", "name": "Operación de sistemas informáticos", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0227. Servicios en red", "grouped": true, "ucs": [{"uc": "UC0955_2", "denom": "Monitorizar los procesos de comunicaciones de la red local", "certs": [{"code": "IFCT0110", "name": "Operacion de redes departamentales", "family": "Informática Y Comunicaciones"}]}, {"uc": "UC0956_2", "denom": "Realizar los procesos de conexión entre redes privadas y redes públicas", "certs": [{"code": "IFCM0110", "name": "Operación en sistemas de comunicaciones de voz y datos", "family": "Informática Y Comunicaciones"}, {"code": "IFCT0110", "name": "Operacion de redes departamentales", "family": "Informática Y Comunicaciones"}]}]}, {"modulo": "0226. Seguridad informática", "grouped": false, "ucs": [{"uc": "UC0959_2", "denom": "Mantener la seguridad de los subsistemas físicos y lógicos en sistemas informáticos", "certs": [{"code": "IFCT0210", "name": "Operación de sistemas informáticos", "family": "Informática Y Comunicaciones"}]}]}]}, "ADMFIN": {"nombre": "Administración y Finanzas", "modules": [{"modulo": "0647. Gestión de la documentación jurídica y empresarial", "grouped": false, "ucs": [{"uc": "UC0988_3", "denom": "Preparar y presentar expedientes y documentación jurídica y empresarial ante Organismos y Administraciones Públicas", "certs": [{"code": "ADGG0308", "name": "Asistencia documental y de gestión en despachos y oficinas", "family": "Administración Y Gestión"}]}]}, {"modulo": "0648. Recursos humanos y responsabilidad social corporativa", "grouped": true, "ucs": [{"uc": "UC0238_3", "denom": "Realizar el apoyo administrativo a las tareas de selección, formación y desarrollo de recursos humanos", "certs": [{"code": "ADGD0208", "name": "Gestión integrada de recursos humanos", "family": "Administración Y Gestión"}]}, {"uc": "UC0980_2", "denom": "Efectuar las actividades de apoyo administrativo de recursos humanos", "certs": [{"code": "ADGD0308", "name": "Actividades de gestión administrativa", "family": "Administración Y Gestión"}, {"code": "ADGG0308", "name": "Asistencia documental y de gestión en despachos y oficinas", "family": "Administración Y Gestión"}]}]}, {"modulo": "0649. Ofimática y proceso de la información", "grouped": true, "ucs": [{"uc": "UC0987_3", "denom": "Administrar los sistemas de información y archivo en soporte convencional e informático", "certs": [{"code": "ADGD0208", "name": "Gestión integrada de recursos humanos", "family": "Administración Y Gestión"}, {"code": "ADGG0308", "name": "Asistencia documental y de gestión en despachos y oficinas", "family": "Administración Y Gestión"}]}, {"uc": "UC0986_3", "denom": "Elaborar documentación y presentaciones profesionales en distintos formatos", "certs": [{"code": "ADGG0108", "name": "Asistencia a la dirección", "family": "Administración Y Gestión"}, {"code": "ADGG0308", "name": "Asistencia documental y de gestión en despachos y oficinas", "family": "Administración Y Gestión"}]}, {"uc": "UC0233_2", "denom": "Manejar aplicaciones ofimáticas en la gestión de la información y la documentación", "certs": [{"code": "ADGD0108", "name": "Gestión contable y gestión administrativa para auditoría", "family": "Administración Y Gestión"}, {"code": "ADGD0110", "name": "Asistencia en la gestión de los procedimientos tributarios", "family": "Administración Y Gestión"}, {"code": "ADGD0208", "name": "Gestión integrada de recursos humanos", "family": "Administración Y Gestión"}, {"code": "ADGD0308", "name": "Actividades de gestión administrativa", "family": "Administración Y Gestión"}, {"code": "ADGN0108", "name": "Financiación de empresas", "family": "Administración Y Gestión"}, {"code": "ADGN0110", "name": "Gestión comercial y técnica de seguros y reaseguros privados", "family": "Administración Y Gestión"}, {"code": "ADGN0208", "name": "Comercialización y administración de productos y servicios financieros.", "family": "Administración Y Gestión"}, {"code": "ADGN0210", "name": "Mediación de seguros y reaseguros privados y actividades auxiliares", "family": "Administración Y Gestión"}, {"code": "ADGG0208", "name": "Actividades administrativas en la relación con el cliente", "family": "Administración Y Gestión"}]}]}, {"modulo": "0650. Proceso integral de la actividad comercial", "grouped": true, "ucs": [{"uc": "UC0500_3", "denom": "Gestionar y controlar la tesorería y su presupuesto", "certs": [{"code": "ADGN0108", "name": "Financiación de empresas", "family": "Administración Y Gestión"}]}, {"uc": "UC0979_2", "denom": "Realizar las gestiones administrativas de tesorería", "certs": [{"code": "ADGD0308", "name": "Actividades de gestión administrativa", "family": "Administración Y Gestión"}, {"code": "ADGG0308", "name": "Asistencia documental y de gestión en despachos y oficinas", "family": "Administración Y Gestión"}]}]}, {"modulo": "0651. Comunicación y atención al cliente", "grouped": false, "ucs": [{"uc": "UC0982_3", "denom": "Administrar y gestionar con autonomía las comunicaciones de la dirección", "certs": [{"code": "ADGG0108", "name": "Asistencia a la dirección", "family": "Administración Y Gestión"}, {"code": "ADGG0308", "name": "Asistencia documental y de gestión en despachos y oficinas", "family": "Administración Y Gestión"}]}]}, {"modulo": "0652. Gestión de recursos humanos", "grouped": false, "ucs": [{"uc": "UC0237_3", "denom": "Realizar la gestión y control administrativo de recursos humanos", "certs": [{"code": "ADGD0208", "name": "Gestión integrada de recursos humanos", "family": "Administración Y Gestión"}]}]}, {"modulo": "0653. Gestión financiera", "grouped": true, "ucs": [{"uc": "UC0498_3", "denom": "Determinar las necesidades financieras de la empresa", "certs": [{"code": "ADGN0108", "name": "Financiación de empresas", "family": "Administración Y Gestión"}]}, {"uc": "UC0499_3", "denom": "Gestionar la información y contratación de los recursos financieros", "certs": [{"code": "ADGN0108", "name": "Financiación de empresas", "family": "Administración Y Gestión"}]}]}, {"modulo": "0654. Contabilidad y fiscalidad", "grouped": false, "ucs": [{"uc": "UC0231_3", "denom": "Realizar la gestión contable y fiscal", "certs": [{"code": "ADGD0108", "name": "Gestión contable y gestión administrativa para auditoría", "family": "Administración Y Gestión"}]}]}]}, "MKT": {"nombre": "Marketing y Publicidad", "modules": [{"modulo": "0930. Políticas de marketing", "grouped": false, "ucs": [{"uc": "UC2185_3", "denom": "Asistir en la definición y seguimiento de las políticas y plan de marketing", "certs": [{"code": "COMM0112", "name": "Gestión de marketing y comunicación", "family": "Comercio Y Marketing"}]}]}, {"modulo": "0623. Gestión económica y financiera de la empresa", "grouped": false, "ucs": [{"uc": "UC2183_3", "denom": "Gestionar la actividad económico-financiera del transporte por carretera", "certs": [{"code": "COML0211", "name": "Gestión comercial y financiera del transporte por carretera", "family": "Comercio Y Marketing"}]}]}, {"modulo": "1007. Diseño y elaboración de material de comunicación", "grouped": false, "ucs": [{"uc": "UC2189_3", "denom": "Elaborar y difundir en diferentes soportes, materiales, sencillos y autoeditables, publipromocionales e informativos", "certs": [{"code": "COMM0112", "name": "Gestión de marketing y comunicación", "family": "Comercio Y Marketing"}]}]}, {"modulo": "1008. Medios y soportes de comunicación", "grouped": false, "ucs": [{"uc": "UC2188_3", "denom": "Asistir en la organización y seguimiento del plan de medios y soportes establecido", "certs": [{"code": "COMM0112", "name": "Gestión de marketing y comunicación", "family": "Comercio Y Marketing"}]}]}, {"modulo": "1009. Relaciones públicas y organización de eventos de marketing", "grouped": false, "ucs": [{"uc": "UC2187_3", "denom": "Organizar y gestionar eventos de marketing y comunicación, siguiendo el protocolo y criterios establecidos", "certs": [{"code": "COMM0112", "name": "Gestión de marketing y comunicación", "family": "Comercio Y Marketing"}]}]}, {"modulo": "1010. Investigación comercial", "grouped": true, "ucs": [{"uc": "UC0993_3", "denom": "Preparar la información e instrumentos necesarios para la investigación de mercados", "certs": [{"code": "COMM0111", "name": "Asistencia a la investigación de mercados", "family": "Comercio Y Marketing"}]}, {"uc": "UC0997_3", "denom": "Colaborar en el análisis y obtención de conclusiones a partir de la investigación de mercados", "certs": [{"code": "COMM0111", "name": "Asistencia a la investigación de mercados", "family": "Comercio Y Marketing"}]}]}, {"modulo": "1011. Trabajo de campo en la investigación comercial", "grouped": true, "ucs": [{"uc": "UC0994_3", "denom": "Organizar y controlar la actividad de los encuestadores", "certs": [{"code": "COMM0111", "name": "Asistencia a la investigación de mercados", "family": "Comercio Y Marketing"}]}, {"uc": "UC0995_2", "denom": "Realizar encuestas y/o entrevistas utilizando las técnicas y procedimientos establecidos", "certs": [{"code": "COMM0111", "name": "Asistencia a la investigación de mercados", "family": "Comercio Y Marketing"}]}]}, {"modulo": "1109. Lanzamiento de productos y servicios", "grouped": false, "ucs": [{"uc": "UC2186_3", "denom": "Gestionar el lanzamiento e implantación de productos y servicios en el mercado", "certs": [{"code": "COMM0112", "name": "Gestión de marketing y comunicación", "family": "Comercio Y Marketing"}]}]}, {"modulo": "1110. Atención al cliente, consumidor y usuario", "grouped": true, "ucs": [{"uc": "UC0241_2", "denom": "Ejecutar las acciones del servicio de atención al cliente/consumidor/usuario", "certs": [{"code": "COMT0110", "name": "Atención al cliente, consumidor o usuario", "family": "Comercio Y Marketing"}, {"code": "COMV0108", "name": "Actividades de venta", "family": "Comercio Y Marketing"}]}, {"uc": "UC0245_3", "denom": "Gestionar las quejas y reclamaciones del cliente/consumidor/usuario", "certs": [{"code": "COMT0110", "name": "Atención al cliente, consumidor o usuario", "family": "Comercio Y Marketing"}]}]}]}, "LABCLIN": {"nombre": "Laboratorio Clínico y Biomédico", "modules": [{"modulo": "1367. Gestión de muestras biológicas", "grouped": true, "ucs": [{"uc": "UC0369_3", "denom": "Gestionar una unidad de un laboratorio de análisis clínicos", "certs": []}, {"uc": "UC0370_3", "denom": "Realizar los procedimientos de las fases preanalítica y postanalítica en el laboratorio clínico", "certs": []}, {"uc": "UC0375_3", "denom": "Gestionar una unidad de un laboratorio de anatomía patológica y citología", "certs": []}]}, {"modulo": "1369. Biología molecular y citogenética", "grouped": true, "ucs": [{"uc": "UC0055_3", "denom": "Realizar ensayos biotecnológicos, informando de los resultados", "certs": [{"code": "QUIA0208", "name": "Ensayos microbiológicos y tecnológicos", "family": "Química"}]}, {"uc": "UC0373_3", "denom": "Realizar análisis hematológicos y genéticos en muestras biológicas humanas y procedimientos para obtener hemoderivados", "certs": []}, {"uc": "UC0381_3", "denom": "Aplicar técnicas de inmunohistoquímica, inmunofluorescencia y biología molecular, bajo la supervisión del facultativo", "certs": []}]}, {"modulo": "1371. Análisis bioquímico", "grouped": false, "ucs": [{"uc": "UC0371_3", "denom": "Realizar análisis de bioquímica clínica en muestras biológicas humanas", "certs": []}]}, {"modulo": "1372. Técnicas de inmunodiagnóstico", "grouped": false, "ucs": [{"uc": "UC0374_3", "denom": "Realizar técnicas inmunológicas de aplicación en las distintas áreas del laboratorio de análisis clínicos", "certs": []}]}, {"modulo": "1373. Microbiología clínica", "grouped": false, "ucs": [{"uc": "UC0372_3", "denom": "Realizar análisis microbiológico e identificar parásitos en muestras biológicos humanas", "certs": []}]}, {"modulo": "1374. Técnicas de análisis hematológicos", "grouped": false, "ucs": [{"uc": "UC0373_3", "denom": "Realizar análisis hematológicos y genéticos en muestras biológicas humanas y procedimientos para obtener hemoderivados", "certs": []}]}]}, "EMERG": {"nombre": "Emergencias Sanitarias", "modules": [{"modulo": "0052. Mantenimiento mecánico preventivo del vehículo / 0054. Dotación sanitaria", "grouped": false, "ucs": [{"uc": "UC0069_1", "denom": "Mantener preventivamente el vehículo sanitario y controlar la dotación material del mismo", "certs": [{"code": "SANT0208", "name": "Transporte sanitario", "family": "Sanidad"}]}]}, {"modulo": "0055. Atención sanitaria inicial en situaciones de emergencia / 0056. Atención sanitaria especial en situaciones de emergencia", "grouped": false, "ucs": [{"uc": "UC0070_2", "denom": "Prestar al paciente soporte vital básico y apoyo al soporte vital avanzado", "certs": [{"code": "SANT0208", "name": "Transporte sanitario", "family": "Sanidad"}]}]}, {"modulo": "0057. Evacuación y traslado de pacientes", "grouped": false, "ucs": [{"uc": "UC0071_2", "denom": "Trasladar al paciente al centro sanitario útil", "certs": [{"code": "SANT0208", "name": "Transporte sanitario", "family": "Sanidad"}]}]}, {"modulo": "0058. Apoyo psicológico en situaciones de emergencia", "grouped": false, "ucs": [{"uc": "UC0072_2", "denom": "Aplicar técnicas de apoyo psicológico y social al paciente y sus familiares", "certs": [{"code": "SANT0108", "name": "Atención sanitaria a múltiples víctimas y catástrofes", "family": "Sanidad"}, {"code": "SANT0208", "name": "Transporte sanitario", "family": "Sanidad"}]}]}, {"modulo": "0053. Logística sanitaria en emergencias", "grouped": false, "ucs": [{"uc": "UC0360_2", "denom": "Colaborar en la organización y el desarrollo de la logística sanitaria en escenarios con múltiples víctimas y catástrofes, asegurando el abastecimiento y la gestión de recursos y apoyando las labores de coordinación en situaciones de crisis", "certs": [{"code": "SANT0108", "name": "Atención sanitaria a múltiples víctimas y catástrofes", "family": "Sanidad"}]}]}, {"modulo": "0055. Atención sanitaria inicial en situaciones de emergencia", "grouped": false, "ucs": [{"uc": "UC0361_2", "denom": "Prestar atención sanitaria inicial a múltiples víctimas", "certs": [{"code": "SANT0108", "name": "Atención sanitaria a múltiples víctimas y catástrofes", "family": "Sanidad"}]}]}, {"modulo": "0059. Planes de emergencias y dispositivos de riesgo previsibles", "grouped": false, "ucs": [{"uc": "UC0362_2", "denom": "Colaborar en la preparación y en la ejecución de planes de emergencia y de dispositivos de riesgo previsible", "certs": [{"code": "SANT0108", "name": "Atención sanitaria a múltiples víctimas y catástrofes", "family": "Sanidad"}]}]}]}, "FARM": {"nombre": "Farmacia y Parafarmacia", "modules": [{"modulo": "0100. Oficina de farmacia", "grouped": false, "ucs": [{"uc": "UC0363_2", "denom": "Controlar los productos y materiales, la facturación y la documentación en establecimientos y servicios de farmacia", "certs": []}]}, {"modulo": "0101. Dispensación de productos farmacéuticos", "grouped": false, "ucs": [{"uc": "UC0364_2", "denom": "Asistir en la dispensación de productos farmacéuticos, informando a los usuarios sobre su utilización, determinando parámetros somatométricos sencillos, bajo la supervisión del facultativo", "certs": []}]}, {"modulo": "0102. Dispensación de productos parafarmacéuticos", "grouped": false, "ucs": [{"uc": "UC0365_2", "denom": "Asistir en la dispensación de productos sanitarios y parafarmacéuticos, informando a los usuarios sobre su utilización, bajo la supervisión del facultativo", "certs": []}]}, {"modulo": "0104. Formulación magistral", "grouped": false, "ucs": [{"uc": "UC0366_2", "denom": "Asistir en la elaboración de fórmulas magistrales, preparados oficinales, dietéticos y cosméticos, bajo la supervisión del facultativo", "certs": []}]}, {"modulo": "0105. Promoción de la salud", "grouped": false, "ucs": [{"uc": "UC0367_2", "denom": "Asistir en la realización de análisis clínicos elementales y normalizados, bajo la supervisión del facultativo", "certs": []}]}, {"modulo": "0105. Promoción de la salud", "grouped": false, "ucs": [{"uc": "UC0368_2", "denom": "Colaborar en la promoción, protección de la salud, prevención de enfermedades y educación sanitaria, bajo la supervisión del facultativo", "certs": []}]}]}, "HIGBUCO": {"nombre": "Higiene Bucodental", "modules": [{"modulo": "0730. Recepción y logística en la clínica dental", "grouped": false, "ucs": [{"uc": "UC1591_3", "denom": "Gestionar el área de trabajo en un gabinete bucodental", "certs": []}]}, {"modulo": "0731. Estudio de la cavidad oral", "grouped": false, "ucs": [{"uc": "UC1592_3", "denom": "Identificar las características anatómicas, fisiológicas y patológicas del aparato estomatognático para su valoración y registro", "certs": []}]}, {"modulo": "0732. Exploración de la cavidad oral / 0733. Intervención bucodental", "grouped": false, "ucs": [{"uc": "UC1593_3", "denom": "Explorar el estado de salud bucodental de los pacientes/usuarios de los servicios de salud, con fines epidemiológicos e intervenir mediante actuaciones directas", "certs": []}]}, {"modulo": "0734. Epidemiologia en salud oral", "grouped": false, "ucs": [{"uc": "UC1594_3", "denom": "Evaluar la salud bucodental de las personas y de la comunidad, mediante actividades de vigilancia epidemiológica", "certs": []}]}, {"modulo": "0735. Educación para la salud oral", "grouped": false, "ucs": [{"uc": "UC1595_3", "denom": "Fomentar la salud bucodental de las personas y de la comunidad, mediante actividades de educación sanitaria y promoción de la salud", "certs": []}]}, {"modulo": "0736. Conservadora, periodoncia, cirugía e implantes / 0737. Prótesis y ortodoncia", "grouped": false, "ucs": [{"uc": "UC1596_3", "denom": "Realizar las técnicas odontológicas propias, delegadas o de ayuda dentro del equipo de salud bucodental", "certs": []}]}]}, "PROTDENT": {"nombre": "Prótesis Dentales", "modules": [{"modulo": "0821. Laboratorio de prótesis dentales", "grouped": false, "ucs": [{"uc": "UC2087_3", "denom": "Gestionar un centro, instalación o laboratorio de prótesis dental y organizar los procesos de diseño, preparación, elaboración, fabricación y reparación de prótesis dentofaciales, aparatos de ortodoncia y férulas oclusales", "certs": []}]}, {"modulo": "0855. Prótesis completas", "grouped": false, "ucs": [{"uc": "UC2089_3", "denom": "Diseñar, preparar, elaborar, fabricar y reparar prótesis completas removibles de resina", "certs": []}]}, {"modulo": "0856. Aparatos de ortodoncia y férulas oclusales", "grouped": false, "ucs": [{"uc": "UC2090_3", "denom": "Diseñar, preparar, elaborar, fabricar y reparar aparatos de ortodoncia y férulas oclusales", "certs": []}]}, {"modulo": "0857. Restauraciones y estructuras metálicas en prótesis fijas", "grouped": false, "ucs": [{"uc": "UC2091_3", "denom": "Diseñar, preparar, elaborar, fabricar y reparar restauraciones y estructuras metálicas para la elaboración de prótesis dentales de metal-cerámica y/o metal-resina fijas", "certs": []}]}, {"modulo": "0858. Prótesis parciales removibles metálicas, de resina y mixtas", "grouped": false, "ucs": [{"uc": "UC2092_3", "denom": "Diseñar, preparar, elaborar, fabricar y reparar prótesis parciales removibles metálicas, de resina y mixtas", "certs": []}]}, {"modulo": "0859. Restauraciones y recubrimientos estéticos", "grouped": false, "ucs": [{"uc": "UC2093_3", "denom": "Diseñar, preparar, elaborar, fabricar y reparar recubrimientos estéticos y restauraciones de cerámica o resina, con o sin metal", "certs": []}]}, {"modulo": "0860. Prótesis sobre implantes", "grouped": false, "ucs": [{"uc": "UC2094_3", "denom": "Diseñar, preparar, elaborar, fabricar y reparar prótesis dentales sobre implantes", "certs": []}]}]}}
+</script>
+<script id="cert-data" type="application/json">
+[{"code": "ADGD0108", "name": "Gestión contable y gestión administrativa para auditoría", "family": "Administración Y Gestión", "ucs": ["UC0231_3", "UC0232_3", "UC0233_2"]}, {"code": "ADGD0110", "name": "Asistencia en la gestión de los procedimientos tributarios", "family": "Administración Y Gestión", "ucs": ["UC0233_2", "UC1783_3", "UC1784_3", "UC1785_2", "UC1786_3", "UC1787_3"]}, {"code": "ADGD0208", "name": "Gestión integrada de recursos humanos", "family": "Administración Y Gestión", "ucs": ["UC0233_2", "UC0237_3", "UC0238_3", "UC0987_3"]}, {"code": "ADGD0308", "name": "Actividades de gestión administrativa", "family": "Administración Y Gestión", "ucs": ["UC0233_2", "UC0973_1", "UC0976_2", "UC0978_2", "UC0979_2", "UC0980_2", "UC0981_2"]}, {"code": "ADGG0108", "name": "Asistencia a la dirección", "family": "Administración Y Gestión", "ucs": ["UC0982_3", "UC0983_3", "UC0984_3", "UC0985_2", "UC0986_3"]}, {"code": "ADGG0208", "name": "Actividades administrativas en la relación con el cliente", "family": "Administración Y Gestión", "ucs": ["UC0233_2", "UC0973_1", "UC0975_2", "UC0976_2", "UC0977_2", "UC0978_2"]}, {"code": "ADGG0308", "name": "Asistencia documental y de gestión en despachos y oficinas", "family": "Administración Y Gestión", "ucs": ["UC0979_2", "UC0980_2", "UC0982_3", "UC0986_3", "UC0987_3", "UC0988_3"]}, {"code": "ADGN0108", "name": "Financiación de empresas", "family": "Administración Y Gestión", "ucs": ["UC0233_2", "UC0498_3", "UC0499_3", "UC0500_3"]}, {"code": "ADGN0110", "name": "Gestión comercial y técnica de seguros y reaseguros privados", "family": "Administración Y Gestión", "ucs": ["UC0233_2", "UC0991_3", "UC0992_3", "UC1796_3", "UC2177_3", "UC2178_3", "UC2179_3", "UC2180_2", "UC2181_2"]}, {"code": "ADGN0208", "name": "Comercialización y administración de productos y servicios financieros.", "family": "Administración Y Gestión", "ucs": ["UC0233_2", "UC0989_3", "UC0990_3", "UC0991_3", "UC0992_3"]}, {"code": "ADGN0210", "name": "Mediación de seguros y reaseguros privados y actividades auxiliares", "family": "Administración Y Gestión", "ucs": ["UC0233_2", "UC0991_3", "UC1793_3", "UC1794_3", "UC1795_2", "UC1796_3", "UC1797_2", "UC1798_3", "UC1799_3"]}, {"code": "COML0211", "name": "Gestión comercial y financiera del transporte por carretera", "family": "Comercio Y Marketing", "ucs": ["UC1006_2", "UC2061_3", "UC2182_3", "UC2183_3", "UC2184_3"]}, {"code": "COMM0111", "name": "Asistencia a la investigación de mercados", "family": "Comercio Y Marketing", "ucs": ["UC0993_3", "UC0994_3", "UC0995_2", "UC0997_3"]}, {"code": "COMM0112", "name": "Gestión de marketing y comunicación", "family": "Comercio Y Marketing", "ucs": ["UC1002_2", "UC1007_3", "UC2185_3", "UC2186_3", "UC2187_3", "UC2188_3", "UC2189_3"]}, {"code": "COMT0110", "name": "Atención al cliente, consumidor o usuario", "family": "Comercio Y Marketing", "ucs": ["UC0241_2", "UC0245_3", "UC0246_3", "UC1002_2"]}, {"code": "COMV0108", "name": "Actividades de venta", "family": "Comercio Y Marketing", "ucs": ["UC0239_2", "UC0240_2", "UC0241_2", "UC1002_2"]}, {"code": "IFCD0111", "name": "Programación en lenguajes estructurados de aplicaciones de gestión", "family": "Informática Y Comunicaciones", "ucs": ["UC0223_3", "UC0226_3", "UC0494_3"]}, {"code": "IFCD0112", "name": "Programación con lenguajes orientados a objetos y bases de datos relacionales", "family": "Informática Y Comunicaciones", "ucs": ["UC0223_3", "UC0226_3", "UC0227_3"]}, {"code": "IFCD0210", "name": "Desarrollo de aplicaciones con tecnologías web", "family": "Informática Y Comunicaciones", "ucs": ["UC0491_3", "UC0492_3", "UC0493_3"]}, {"code": "IFCM0110", "name": "Operación en sistemas de comunicaciones de voz y datos", "family": "Informática Y Comunicaciones", "ucs": ["UC0956_2", "UC0960_2", "UC0961_2"]}, {"code": "IFCT0109", "name": "Seguridad informática", "family": "Informática Y Comunicaciones", "ucs": ["UC0486_3", "UC0487_3", "UC0488_3", "UC0489_3", "UC0490_3"]}, {"code": "IFCT0110", "name": "Operacion de redes departamentales", "family": "Informática Y Comunicaciones", "ucs": ["UC0220_2", "UC0955_2", "UC0956_2"]}, {"code": "IFCT0209", "name": "Sistemas microinformáticos", "family": "Informática Y Comunicaciones", "ucs": ["UC0219_2", "UC0220_2", "UC0221_2", "UC0222_2"]}, {"code": "IFCT0210", "name": "Operación de sistemas informáticos", "family": "Informática Y Comunicaciones", "ucs": ["UC0219_2", "UC0957_2", "UC0958_2", "UC0959_2"]}, {"code": "IFCT0309", "name": "Montaje y reparación de sistemas microinformáticos", "family": "Informática Y Comunicaciones", "ucs": ["UC0219_2", "UC0953_2", "UC0954_2"]}, {"code": "IFCT0310", "name": "Administración de bases de datos", "family": "Informática Y Comunicaciones", "ucs": ["UC0223_3", "UC0224_3", "UC0225_3"]}, {"code": "IFCT0409", "name": "Implantación y gestión de elementos informáticos en sistemas domóticos/inmóticos, de control de accesos y presencia y de videovigilancia", "family": "Informática Y Comunicaciones", "ucs": ["UC0490_3", "UC1219_3", "UC1220_3"]}, {"code": "IFCT0509", "name": "Administración de servicios de internet", "family": "Informática Y Comunicaciones", "ucs": ["UC0490_3", "UC0495_3", "UC0496_3", "UC0497_3"]}, {"code": "IFCT0510", "name": "Gestión de sistemas informáticos", "family": "Informática Y Comunicaciones", "ucs": ["UC0484_3", "UC0485_3", "UC0486_3"]}, {"code": "IFCT0609", "name": "Programación de sistemas informáticos", "family": "Informática Y Comunicaciones", "ucs": ["UC0490_3", "UC0964_3", "UC0965_3"]}, {"code": "IFCT0610", "name": "Administración y programación en sistemas de planificación de recursos empresariales y de gestión de relaciones con clientes", "family": "Informática Y Comunicaciones", "ucs": ["UC1213_3", "UC1214_3", "UC1215_3"]}, {"code": "QUIA0208", "name": "Ensayos microbiológicos y tecnológicos", "family": "Química", "ucs": ["UC0052_3", "UC0053_3", "UC0054_3", "UC0055_3"]}, {"code": "SANT0108", "name": "Atención sanitaria a múltiples víctimas y catástrofes", "family": "Sanidad", "ucs": ["UC0072_2", "UC0360_2", "UC0361_2", "UC0362_2"]}, {"code": "SANT0208", "name": "Transporte sanitario", "family": "Sanidad", "ucs": ["UC0069_1", "UC0070_2", "UC0071_2", "UC0072_2"]}]</script>
+<script>
+(function () {
+  "use strict";
+
+  // ── Datos ──────────────────────────────────────────────────────────────
+  var DATA = {};
+  var CERTS = [];
+  try {
+    var raw = document.getElementById('tool-data');
+    if (raw) DATA = JSON.parse(raw.textContent);
+  } catch (e) {
+    console.error('No se pudieron leer los datos de convalidaciones:', e);
+  }
+  try {
+    var rawCerts = document.getElementById('cert-data');
+    if (rawCerts) CERTS = JSON.parse(rawCerts.textContent);
+  } catch (e) {
+    console.error('No se pudieron leer los certificados:', e);
+  }
+  var CICLO_KEYS = Object.keys(DATA);
+
+  // ── Estado ─────────────────────────────────────────────────────────────
+  var state = {
+    modo: 'A',          // 'A' = busco por UC, 'B' = busco por módulo, 'C' = aporto un certificado completo
+    ciclo: '',           // '' = todos los ciclos
+    filter: '',
+    selectedUCs: new Set(),  // modo A y C: códigos UC marcados/acreditados
+    selectedMod: null,       // modo B: { ciclo, idx }
+    selectedCertCode: null   // modo C: código del certificado elegido
+  };
+
+  // ── Utilidades ─────────────────────────────────────────────────────────
+  function $(id) { return document.getElementById(id); }
+  function norm(s) {
+    return (s || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+  function esc(s) {
+    return (s || '').toString()
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function on(el, evt, handler) {
+    if (el) el.addEventListener(evt, handler);
+  }
+
+  // ── Construcción de índices auxiliares ────────────────────────────────
+  // Lista plana de todas las UC únicas (para modo A, filtro "todos los ciclos")
+  function ucsDeCiclo(cicloKey) {
+    var out = new Map();
+    var keys = cicloKey ? [cicloKey] : CICLO_KEYS;
+    keys.forEach(function (ck) {
+      var ciclo = DATA[ck];
+      if (!ciclo) return;
+      ciclo.modules.forEach(function (mod) {
+        mod.ucs.forEach(function (u) {
+          if (!out.has(u.uc)) out.set(u.uc, u.denom);
+        });
+      });
+    });
+    return out;
+  }
+
+  function modulosDeCiclo(cicloKey) {
+    var out = [];
+    var keys = cicloKey ? [cicloKey] : CICLO_KEYS;
+    keys.forEach(function (ck) {
+      var ciclo = DATA[ck];
+      if (!ciclo) return;
+      ciclo.modules.forEach(function (mod, idx) {
+        out.push({ cicloKey: ck, cicloNombre: ciclo.nombre, idx: idx, modulo: mod.modulo });
+      });
+    });
+    return out;
+  }
+
+  // ── Render: paso 1, modo ─────────────────────────────────────────────
+  function renderModoTabs() {
+    var el = $('modoTabs');
+    if (!el) return;
+    var btns = el.querySelectorAll('[data-modo]');
+    btns.forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-modo') === state.modo);
+    });
+  }
+
+  // ── Render: paso 2, grid de ciclos ───────────────────────────────────
+  function renderCicloGrid() {
+    var grid = $('cicloGrid');
+    if (!grid) return;
+    var html = '<button class="ciclo-btn' + (state.ciclo === '' ? ' active' : '') + '" data-ciclo="">' +
+      '<div class="ciclo-code">TODOS</div><div class="ciclo-name">Todos los ciclos</div></button>';
+    CICLO_KEYS.forEach(function (ck) {
+      var nombre = DATA[ck] ? DATA[ck].nombre : ck;
+      html += '<button class="ciclo-btn' + (state.ciclo === ck ? ' active' : '') + '" data-ciclo="' + ck + '">' +
+        '<div class="ciclo-code">' + esc(ck) + '</div><div class="ciclo-name">' + esc(nombre) + '</div></button>';
+    });
+    grid.innerHTML = html;
+  }
+
+  // ── Render: paso 2, lista de items (UC o módulos) ────────────────────
+  function renderItemList() {
+    var listEl = $('itemList');
+    var labelEl = $('listLabel');
+    var countEl = $('listCount');
+    var selCountEl = $('selCount');
+    var title = $('step2Title');
+    if (!listEl) return;
+
+    var q = norm(state.filter);
+    var html = '';
+    var count = 0;
+
+    if (state.modo === 'A') {
+      if (labelEl) labelEl.textContent = 'Competencias (UC) disponibles';
+      if (title) title.textContent = 'Elige el ciclo y marca tus competencias';
+      var ucs = ucsDeCiclo(state.ciclo);
+      var entries = Array.from(ucs.entries()).filter(function (e) {
+        return !q || norm(e[0]).indexOf(q) !== -1 || norm(e[1]).indexOf(q) !== -1;
+      });
+
+      html += '<div class="quick-row">' +
+        '<button class="btn-quick" data-action="check-all">Marcar todas las visibles</button>' +
+        '<button class="btn-quick" data-action="check-none">Quitar selección</button></div>';
+
+      entries.forEach(function (e) {
+        var uc = e[0], denom = e[1];
+        var checked = state.selectedUCs.has(uc);
+        html += '<div class="item-row' + (checked ? ' checked' : '') + '" data-uc="' + esc(uc) + '">' +
+          '<span class="check"></span><span class="item-code">' + esc(uc) + '</span><span class="item-name">' + esc(denom) + '</span></div>';
+      });
+      count = entries.length;
+
+      if (selCountEl) {
+        selCountEl.style.display = state.selectedUCs.size ? '' : 'none';
+        selCountEl.textContent = state.selectedUCs.size + ' seleccionada' + (state.selectedUCs.size === 1 ? '' : 's');
+      }
+    } else if (state.modo === 'C') {
+      if (labelEl) labelEl.textContent = 'Certificados de profesionalidad';
+      if (title) title.textContent = 'Elige el certificado que aporta';
+      if (selCountEl) selCountEl.style.display = 'none';
+      var certList = CERTS.filter(function (c) {
+        return !q || norm(c.code).indexOf(q) !== -1 || norm(c.name).indexOf(q) !== -1 || norm(c.family).indexOf(q) !== -1;
+      });
+      certList.forEach(function (c) {
+        var sel = state.selectedCertCode === c.code;
+        html += '<div class="item-row' + (sel ? ' selected' : '') + '" data-cert="' + esc(c.code) + '">' +
+          '<div style="flex:1"><span class="item-code" style="margin-right:8px">' + esc(c.code) + '</span><span class="item-name">' + esc(c.name) + '</span>' +
+          '<div style="font-size:11px;color:var(--text2);margin-top:2px">' + esc(c.family) + ' · ' + c.ucs.length + ' UC</div></div></div>';
+      });
+      count = certList.length;
+      if (state.selectedCertCode) {
+        html = '<div class="alert alert-blue" style="margin:0 0 10px"><span class="alert-icon">ℹ</span><span>Elegir otro certificado sustituye las UC marcadas actualmente por las suyas.</span></div>' + html;
+      }
+    } else {
+      if (labelEl) labelEl.textContent = 'Módulos disponibles';
+      if (title) title.textContent = 'Elige el ciclo y el módulo';
+      if (selCountEl) selCountEl.style.display = 'none';
+      var mods = modulosDeCiclo(state.ciclo).filter(function (m) {
+        return !q || norm(m.modulo).indexOf(q) !== -1;
+      });
+      var lastCiclo = null;
+      mods.forEach(function (m) {
+        if (!state.ciclo && m.cicloKey !== lastCiclo) {
+          html += '<div class="group-label">' + esc(m.cicloNombre) + '</div>';
+          lastCiclo = m.cicloKey;
+        }
+        var sel = state.selectedMod && state.selectedMod.ciclo === m.cicloKey && state.selectedMod.idx === m.idx;
+        html += '<div class="item-row' + (sel ? ' selected' : '') + '" data-mod-ciclo="' + esc(m.cicloKey) + '" data-mod-idx="' + m.idx + '">' +
+          '<span class="item-name">' + esc(m.modulo) + '</span></div>';
+      });
+      count = mods.length;
+    }
+
+    if (countEl) countEl.textContent = String(count);
+    if (!count) listEl.innerHTML = html + '<div class="empty-hint">Sin resultados para este filtro.</div>';
+    else listEl.innerHTML = html;
+  }
+
+  // ── Render: paso 3, resultado ─────────────────────────────────────────
+  function certListHtml(certs) {
+    if (!certs || !certs.length) return '';
+    return '<div class="cert-list">' + certs.map(function (c) {
+      return '<div class="cert-chip"><span class="cert-code">' + esc(c.code) + '</span>' + esc(c.name) + '</div>';
+    }).join('') + '</div>';
+  }
+
+  function renderResultEmpty(msg) {
+    var body = $('resultBody');
+    if (!body) return;
+    body.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>' + esc(msg) + '</p></div>';
+  }
+
+  function renderResultUC(uc) {
+    var body = $('resultBody');
+    if (!body) return;
+    var matches = [];
+    var keys = state.ciclo ? [state.ciclo] : CICLO_KEYS;
+    keys.forEach(function (ck) {
+      var ciclo = DATA[ck];
+      if (!ciclo) return;
+      ciclo.modules.forEach(function (mod) {
+        mod.ucs.forEach(function (u) {
+          if (u.uc !== uc) return;
+          matches.push({ cicloNombre: ciclo.nombre, modulo: mod.modulo, grouped: mod.grouped, certs: u.certs, siblings: mod.ucs.filter(function (x) { return x.uc !== uc; }) });
+        });
+      });
+    });
+
+    if (!matches.length) { renderResultEmpty('No se han encontrado módulos para esta UC con el filtro actual.'); return; }
+
+    var html = '<div style="font-family:\'DM Mono\',monospace;font-size:12px;color:var(--accent);font-weight:700;margin-bottom:10px">' + esc(uc) + '</div>';
+    matches.forEach(function (m) {
+      var status = m.certs.length === 0 ? 'none' : (m.grouped ? 'warn' : 'ok');
+      var pillText = status === 'none' ? 'Sin certificado' : (status === 'warn' ? 'Requiere varias UC' : 'UC única');
+      html += '<div class="resumen-item"><div class="ri-top"><div><div class="ri-name">' + esc(m.modulo) + '</div><div class="ri-sub">' + esc(m.cicloNombre) + '</div></div>' +
+        '<span class="status-pill status-' + status + '">' + pillText + '</span></div>';
+      if (m.grouped && m.siblings.length) {
+        var sibs = m.siblings.map(function (s) { return esc(s.uc) + ' — ' + esc(s.denom); }).join('<br>');
+        html += '<div class="alert alert-amber"><span class="alert-icon">⚠</span><span><b>También debes acreditar:</b><br>' + sibs + '<br>(pueden proceder de un certificado distinto)</span></div>';
+      }
+      if (m.certs.length === 0) {
+        html += '<div class="alert alert-red"><span class="alert-icon">✕</span><span>No existe certificado de profesionalidad en el repertorio que recoja esta UC.</span></div>';
+      } else {
+        html += certListHtml(m.certs);
+      }
+      html += '</div>';
+    });
+    body.innerHTML = html;
+  }
+
+  // Modo A con selección múltiple: para cada módulo relevante, comprueba si
+  // las UC marcadas cubren TODO lo que exige (módulo cumplido) o solo parte.
+  function renderResultMulti() {
+    var body = $('resultBody');
+    if (!body) return;
+    if (!state.selectedUCs.size) {
+      var msg = state.modo === 'C'
+        ? 'Elige un certificado de profesionalidad en la lista para ver qué puede convalidar.'
+        : 'Marca una o varias UC en la lista para ver qué módulos puedes convalidar.';
+      renderResultEmpty(msg);
+      return;
+    }
+
+    var keys = state.ciclo ? [state.ciclo] : CICLO_KEYS;
+    var porCiclo = [];
+    keys.forEach(function (ck) {
+      var ciclo = DATA[ck];
+      if (!ciclo) return;
+      var rows = [];
+      ciclo.modules.forEach(function (mod) {
+        var tiene = mod.ucs.filter(function (u) { return state.selectedUCs.has(u.uc); });
+        if (!tiene.length) return;
+        var faltan = mod.ucs.filter(function (u) { return !state.selectedUCs.has(u.uc); });
+        rows.push({ modulo: mod.modulo, grouped: mod.grouped, tiene: tiene, faltan: faltan, completo: faltan.length === 0 });
+      });
+      if (rows.length) porCiclo.push({ nombre: ciclo.nombre, rows: rows });
+    });
+
+    var header = '';
+    if (state.modo === 'C' && state.selectedCertCode) {
+      var cert = CERTS.filter(function (c) { return c.code === state.selectedCertCode; })[0];
+      if (cert) {
+        header = '<div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)">' +
+          '<div class="mono" style="font-size:11px;color:var(--accent);font-weight:700">' + esc(cert.code) + '</div>' +
+          '<div style="font-size:13.5px;font-weight:600;margin-top:2px">' + esc(cert.name) + '</div>' +
+          '<div style="font-size:11.5px;color:var(--text2);margin-top:2px">' + esc(cert.family) + ' · acredita ' + cert.ucs.length + ' UC en total</div></div>';
+      }
+    }
+
+    if (!porCiclo.length) {
+      renderResultEmpty('Ninguna de las UC ' + (state.modo === 'C' ? 'de este certificado' : 'marcadas') + ' aparece en este ciclo. Prueba a quitar el filtro de ciclo.');
+      if (header) { var body2 = $('resultBody'); if (body2) body2.innerHTML = header + body2.innerHTML; }
+      return;
+    }
+
+    var html = header;
+    porCiclo.forEach(function (grupo) {
+      html += '<div class="group-label">' + esc(grupo.nombre) + '</div>';
+      grupo.rows.forEach(function (r) {
+        var status = r.completo ? 'ok' : 'warn';
+        var pillText = r.completo ? 'Cumples' : 'Incompleto';
+        html += '<div class="resumen-item"><div class="ri-top"><div><div class="ri-name">' + esc(r.modulo) + '</div>' +
+          '<div class="ri-sub">' + r.tiene.length + ' de ' + (r.tiene.length + r.faltan.length) + ' UC acreditadas</div></div>' +
+          '<span class="status-pill status-' + status + '">' + pillText + '</span></div>';
+        if (!r.completo) {
+          var faltantes = r.faltan.map(function (u) { return esc(u.uc) + ' — ' + esc(u.denom); }).join('<br>');
+          html += '<div class="alert alert-amber"><span class="alert-icon">⚠</span><span><b>Aún te falta acreditar:</b><br>' + faltantes + '</span></div>';
+        }
+        html += '</div>';
+      });
+    });
+    body.innerHTML = html;
+  }
+
+  function renderResultModulo(cicloKey, idx) {
+    var body = $('resultBody');
+    if (!body) return;
+    var ciclo = DATA[cicloKey];
+    var mod = ciclo ? ciclo.modules[idx] : null;
+    if (!mod) { renderResultEmpty('No se ha encontrado ese módulo.'); return; }
+
+    var html = '<div class="ri-name" style="margin-bottom:2px">' + esc(mod.modulo) + '</div>' +
+      '<div class="ri-sub" style="margin-bottom:10px">' + esc(ciclo.nombre) + '</div>';
+
+    if (mod.grouped) {
+      html += '<div class="alert alert-amber"><span class="alert-icon">⚠</span><span>Hacen falta <b>todas</b> estas UC para convalidar el módulo (pueden proceder de certificados distintos).</span></div>';
+    }
+
+    mod.ucs.forEach(function (u) {
+      var status = u.certs.length === 0 ? 'none' : (mod.grouped ? 'warn' : 'ok');
+      var pillText = status === 'none' ? 'Sin certificado' : (status === 'warn' ? 'Parte del grupo' : 'UC única');
+      html += '<div class="resumen-item"><div class="ri-top"><div><div class="ri-name">' + esc(u.uc) + '</div><div class="ri-sub">' + esc(u.denom) + '</div></div>' +
+        '<span class="status-pill status-' + status + '">' + pillText + '</span></div>';
+      if (u.certs.length === 0) {
+        html += '<div class="alert alert-red"><span class="alert-icon">✕</span><span>No existe certificado de profesionalidad en el repertorio que recoja esta UC.</span></div>';
+      } else {
+        html += certListHtml(u.certs);
+      }
+      html += '</div>';
+    });
+    body.innerHTML = html;
+  }
+
+  function renderResult() {
+    if (state.modo === 'A' || state.modo === 'C') { renderResultMulti(); return; }
+    if (!state.selectedMod) { renderResultEmpty('Elige un modo, un ciclo, y selecciona una competencia o un módulo de la lista para ver el resultado.'); return; }
+    renderResultModulo(state.selectedMod.ciclo, state.selectedMod.idx);
+  }
+
+  // ── Render orquestador ────────────────────────────────────────────────
+  function renderAll() {
+    renderModoTabs();
+    renderCicloGrid();
+    renderItemList();
+    renderResult();
+  }
+
+  // ── Eventos (delegación, defensivos) ──────────────────────────────────
+  on($('modoTabs'), 'click', function (ev) {
+    var btn = ev.target.closest('[data-modo]');
+    if (!btn) return;
+    state.modo = btn.getAttribute('data-modo');
+    state.filter = '';
+    var fb = $('filterBox'); if (fb) fb.value = '';
+    renderAll();
+  });
+
+  on($('cicloGrid'), 'click', function (ev) {
+    var btn = ev.target.closest('[data-ciclo]');
+    if (!btn) return;
+    state.ciclo = btn.getAttribute('data-ciclo');
+    renderAll();
+  });
+
+  on($('filterBox'), 'input', function (ev) {
+    state.filter = ev.target.value;
+    renderItemList();
+  });
+
+  on($('itemList'), 'click', function (ev) {
+    var action = ev.target.closest('[data-action]');
+    if (action) {
+      var visibleUCs = Array.from($('itemList').querySelectorAll('[data-uc]')).map(function (r) { return r.getAttribute('data-uc'); });
+      if (action.getAttribute('data-action') === 'check-all') {
+        visibleUCs.forEach(function (uc) { state.selectedUCs.add(uc); });
+      } else if (action.getAttribute('data-action') === 'check-none') {
+        visibleUCs.forEach(function (uc) { state.selectedUCs.delete(uc); });
+      }
+      renderItemList();
+      renderResult();
+      return;
+    }
+
+    var row = ev.target.closest('[data-uc], [data-mod-ciclo], [data-cert]');
+    if (!row) return;
+    if (row.hasAttribute('data-uc')) {
+      var uc = row.getAttribute('data-uc');
+      if (state.selectedUCs.has(uc)) state.selectedUCs.delete(uc); else state.selectedUCs.add(uc);
+    } else if (row.hasAttribute('data-cert')) {
+      var code = row.getAttribute('data-cert');
+      var cert = CERTS.filter(function (c) { return c.code === code; })[0];
+      if (cert) {
+        state.selectedCertCode = code;
+        state.selectedUCs = new Set(cert.ucs);
+      }
+    } else {
+      state.selectedMod = { ciclo: row.getAttribute('data-mod-ciclo'), idx: parseInt(row.getAttribute('data-mod-idx'), 10) };
+    }
+    renderItemList();
+    renderResult();
+  });
+
+  // ── Init ───────────────────────────────────────────────────────────────
+  if (!CICLO_KEYS.length) {
+    renderResultEmpty('No se han podido cargar los datos de convalidaciones.');
+  } else {
+    renderAll();
+  }
+})();
+</script>
+</body>
+</html>

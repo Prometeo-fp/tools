@@ -16,13 +16,14 @@ header{background:#0B1829;color:white;padding:0 32px;display:flex;align-items:ce
 .hero{max-width:700px;margin:60px auto;padding:0 24px;text-align:center;}
 .hero h1{font-size:28px;font-weight:700;margin-bottom:12px;}
 .hero p{font-size:15px;color:#5A6778;margin-bottom:48px;line-height:1.6;}
-.tools{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:700px;margin:0 auto;padding:0 24px;}
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1040px;margin:0 auto;padding:0 24px;}
 .tool-card{background:white;border:2px solid #E0D6DE;border-radius:14px;padding:32px 28px;text-decoration:none;color:inherit;transition:all .15s;display:block;}
 .tool-card:hover{border-color:#FF5A1F;box-shadow:0 4px 20px rgba(255,90,31,.12);transform:translateY(-2px);}
 .tool-icon{font-size:36px;margin-bottom:16px;}
 .tool-title{font-size:17px;font-weight:700;margin-bottom:8px;}
 .tool-desc{font-size:13px;color:#5A6778;line-height:1.5;margin-bottom:20px;}
 .tool-btn{display:inline-block;background:#FF5A1F;color:white;padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;}
+@media(max-width:900px){.tools{grid-template-columns:1fr 1fr;max-width:700px;}}
 @media(max-width:600px){.tools{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -48,6 +49,12 @@ header{background:#0B1829;color:white;padding:0 32px;display:flex;align-items:ce
     <div class="tool-icon">📋</div>
     <div class="tool-title">Consulta de Convalidaciones</div>
     <div class="tool-desc">Consulta qué asignaturas puede convalidar el alumno según su titulación de origen.</div>
+    <span class="tool-btn">Abrir →</span>
+  </a>
+  <a href="unidades_de_competencia.html" class="tool-card">
+    <div class="tool-icon">🧩</div>
+    <div class="tool-title">Unidades de Competencia</div>
+    <div class="tool-desc">Cruza UC de certificados de profesionalidad con los módulos de cada ciclo. Por competencia, por módulo o por certificado completo.</div>
     <span class="tool-btn">Abrir →</span>
   </a>
 </div>
